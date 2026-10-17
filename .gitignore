@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Runtime output (fetched articles, images, etc.)
+cache/
+*.log
+
+# Auth / login state (cookies — never commit)
+auth/
+*.storage.json
+
+# OS
+.DS_Store
+
+# Editors
+.idea/
+*.swp

@@ -1,0 +1,28 @@
+# 掘金文章采集 Profile（示例：正文定位 + 结构化字段 + 图片下载）
+name: juejin
+description: 抓取掘金技术文章，返回含代码块和图片的 Markdown
+match:
+  - "https://juejin.cn/post/*"
+
+navigation:
+  waitUntil: "visible:.markdown-body"
+  timeoutMs: 30000
+
+extraction:
+  mainContent: ".markdown-body"
+  title: "h1.article-title"
+  remove:
+    - ".article-suspended-panel"
+    - ".copyright"
+    - "pre + div" # 代码块自带的复制按钮等工具条
+
+images:
+  mode: download
+  saveDir: cache/images/juejin
+
+structured:
+  fields:
+    author: { selector: ".username" }
+    publishTime: { selector: ".meta-box .time", attribute: "title" }
+    tags: { selector: ".tag-list li .tag-title", multiple: true }
+    readCount: { selector: ".title-row .count" }

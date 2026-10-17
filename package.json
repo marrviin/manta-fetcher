@@ -1,0 +1,19 @@
+{
+  "name": "manta-fetcher",
+  "version": "0.1.0",
+  "private": true,
+  "description": "场景化网页采集 MCP monorepo：无头浏览器 + 站点 Profile 定制，返回结构化 Markdown",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "setup": "pnpm --filter @manta-fetcher/core exec playwright install chromium",
+    "dev": "pnpm --filter @manta-fetcher/mcp dev"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}

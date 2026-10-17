@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "manta-fetcher": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "/Users/panmenglin3/github/manta-fetcher/packages/mcp/dist/index.js"
+      ],
+      "env": {}
+    }
+  }
+}

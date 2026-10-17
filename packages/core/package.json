@@ -1,0 +1,26 @@
+{
+  "name": "@manta-fetcher/core",
+  "version": "0.1.0",
+  "description": "采集引擎：无头浏览器、Site Profile、DOM→Markdown、图片处理",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "linkedom": "^0.18.12",
+    "playwright": "^1.55.0",
+    "yaml": "^2.8.0",
+    "zod": "^3.25.0"
+  }
+}

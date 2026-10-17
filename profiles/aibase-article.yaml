@@ -1,0 +1,19 @@
+# AIBase 新闻详情页
+name: aibase-article
+description: AIBase AI 新闻正文，返回 Markdown
+match:
+  - "https://news.aibase.com/zh/news/*"
+
+navigation:
+  waitUntil: "visible:article h1"
+  timeoutMs: 30000
+
+extraction:
+  mainContent: "article"
+  title: "article h1"
+  remove:
+    - "article nav" # 面包屑（AI资讯/正文 等）
+    - "article a[href*='/zh/news']" # 相关联跳转链接
+    # h1 下方的元信息条（发布于/发布时间/阅读时长），落盘文件头注释已含时间
+    - "article h1 + div"
+    - "article .borderTop"

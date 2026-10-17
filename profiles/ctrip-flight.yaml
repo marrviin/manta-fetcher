@@ -1,0 +1,42 @@
+# 携程机票列表（传输指纹级反爬 whaleguard）：必须 CDP 接管用户真实 Chrome
+# 前置：Chrome 以调试端口启动 ——
+#   /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=/tmp/mf-chrome-cdp
+#   （新版 Chrome 的 CDP /json 端点要求 Host 为 localhost，端点写 http://localhost:9222）
+# 风控说明：whaleguard 校验 TLS/HTTP2 传输指纹（HTTP 432 直拦、无页面挑战），Playwright 自启内核
+#（含 chrome 渠道/有头模式）均被拦；CDP 接管下指纹与真实浏览器一致，2026-10-15 实测可正常渲染。
+name: ctrip-flight
+description: "携程机票搜索列表（航班/起抵/价格），需 CDP 接管真实 Chrome（先启动 Chrome 调试端口）"
+match:
+  - "https://flights.ctrip.com/*"
+
+navigation:
+  browser: "cdp:http://localhost:9222" # CDP 接管：连接用户 Chrome；忽略 UA/viewport/storageState 配置
+  # 航班列表由接口渲染（约 15-30s），等 .flight-item 出现
+  waitUntil: "visible:.flight-item"
+  timeoutMs: 60000
+  # 首屏条目就绪后列表仍会继续加载，追加固定等待拿全量
+actions:
+  - wait: { ms: 8000 }
+
+extraction:
+  mainContent: ".result-wrapper"
+  title: "h1"
+  remove:
+    - ".flight-search-form" # 顶部搜索表单（出发地/日期选择器）
+    - ".filter-wrapper, .sort-bar" # 筛选条/排序条
+    - "footer, .footer"
+
+structured:
+  fields:
+    flights:
+      selector: ".flight-item"
+      multiple: true
+      fields:
+        airline: { selector: ".airline-name span" }
+        flightNo: { selector: "&", attribute: "data-testid" } # flight-item-1（序号），真实航班号在 airlineName id 里
+        departTime: { selector: ".depart-box .time" }
+        departAirport: { selector: ".depart-box .airport .name" }
+        departTerminal: { selector: ".depart-box .airport .terminal" }
+        arriveTime: { selector: ".arrive-box .time" }
+        arriveAirport: { selector: ".arrive-box .airport .name" }
+        price: { selector: ".price-box, [class*='price']" }

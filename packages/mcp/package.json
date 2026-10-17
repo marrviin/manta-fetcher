@@ -1,0 +1,24 @@
+{
+  "name": "@manta-fetcher/mcp",
+  "version": "0.1.0",
+  "description": "manta-fetcher MCP server 与 CLI",
+  "type": "module",
+  "bin": {
+    "manta-fetcher": "dist/index.js"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@manta-fetcher/core": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.20.0",
+    "playwright": "^1.64.0"
+  }
+}
