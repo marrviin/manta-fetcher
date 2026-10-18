@@ -14,7 +14,8 @@ extraction:
   remove:
     - ".article-suspended-panel"
     - ".copyright"
-    - "pre + div" # 代码块自带的复制按钮等工具条
+    - ".code-block-extension-header" # pre 内部懒注入的工具条（语言标签/复制代码/代码解读）
+    - "pre + div"
 
 images:
   mode: download

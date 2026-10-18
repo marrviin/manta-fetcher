@@ -11,6 +11,7 @@ import {
   type RawPass,
 } from "../layout/boxTree.js";
 import { screenshotsDir, storageStatePath } from "../paths.js";
+import { partialScoringParams } from "../layout/scoring.js";
 import { ensureDir } from "../paths.js";
 import path from "node:path";
 
@@ -26,6 +27,8 @@ export interface EffectiveProfile {
   mainContent?: string;
   remove?: string[];
   titleSelector?: string;
+  /** IR 布局管线场景差异（profile.layout，缺省走引擎默认值） */
+  layout?: SiteProfile["layout"];
   headingOffset: number;
   storageState?: string;
   /** 抓取后 URL 命中该正则 → 登录态失效 */
@@ -61,6 +64,7 @@ export function effectiveProfile(def: SiteProfile | null): EffectiveProfile {
     mainContent: def?.extraction?.mainContent,
     remove: def?.extraction?.remove,
     titleSelector: def?.extraction?.title,
+    layout: def?.layout,
     headingOffset: def?.markdown?.headingOffset ?? 0,
     storageState: def?.auth?.storageState
       ? path.resolve(def.auth.storageState)
@@ -119,18 +123,29 @@ export class FetchEngine {
       await eff.prepare?.(page, { url });
 
       // 暖场滚动：触发懒加载并等图片撑开盒子，保证 IR 坐标与图片完整；
-      // 内部滚动容器页面（joyspace 虚拟滚动）从 mainContent 向上找滚动容器预热
+      // 内部滚动容器页面（虚拟滚动）从 mainContent 向上找滚动容器预热
       await warmPageForLayout(page, 8000, eff.mainContent);
 
       // IR 采集：浏览器侧 collectLayoutFn 定位（mainContent/remove 裁剪）+ 多趟原始采集，
-      // Node 侧 enrichLayout 完成聚类统计与评分
+      // Node 侧 enrichLayout 完成聚类统计与评分（profile.layout 只覆盖开放的场景阈值）
       const args: ExtractArgs = {
         mainContent: eff.mainContent,
         remove: eff.remove,
         titleSelector: eff.titleSelector,
+        minSize: eff.layout?.minSize,
+        maxNodes: eff.layout?.maxNodes,
+        textMax: eff.layout?.textMax,
+        // null 表示整页 = 引擎缺省 Infinity，转 undefined 走缺省（Infinity 不可跨 JSON 序列化）
+        viewportMargin:
+          eff.layout?.viewportMargin == null
+            ? undefined
+            : eff.layout.viewportMargin,
       };
       const pass: RawPass = await page.evaluate(collectLayoutFn, args);
-      const extracted: ExtractResult = enrichLayout(pass);
+      const extracted: ExtractResult = enrichLayout(pass, {
+        params: partialScoringParams(eff.layout),
+        pageType: eff.layout?.pageType,
+      });
 
       return {
         title: extracted.title,
@@ -161,7 +176,7 @@ export class FetchEngine {
   }
 
   /**
-   * 在 site 的浏览器会话中打开 intermediateUrl 并跟随跳转（含 JS 跳转，如搜狗 /link?url=），
+   * 在 site 的浏览器会话中打开 intermediateUrl 并跟随跳转（含 JS 跳转，如搜索引擎 /link?url= 中转链），
    * 返回最终落点 URL。用于 composite.resolveRedirect：中转链的 token 依赖列表页会话。
    */
   async resolveRedirect(
@@ -178,7 +193,7 @@ export class FetchEngine {
         waitUntil: "domcontentloaded",
         timeout: timeoutMs,
       });
-      // 等待跳转稳定：URL 连续 2s 不变（搜狗的跳转页由 JS 触发 location.replace）
+      // 等待跳转稳定：URL 连续 2s 不变（中转跳转页由 JS 触发 location.replace）
       let lastUrl = page.url();
       let stableSince = Date.now();
       const deadline = Date.now() + timeoutMs;

@@ -26,6 +26,7 @@ interface ContextEntry {
 /**
  * 缺省 UA 伪装真实 Chrome：无头默认 UA 带 HeadlessChrome 标记，
  * 部分 CDN 对它直接返回 403 HTML（图片请求被 Chromium ORB 拦掉 → 页面图片全部加载失败）。
+ * 通用反指纹伪装；站点级覆盖走 profile.navigation.userAgent。
  */
 const DEFAULT_UA =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
@@ -75,7 +76,10 @@ export class BrowserPool {
           this.cdpBrowsers.delete(endpoint);
           throw new Error(
             `CDP 连接失败（${endpoint}）：${err instanceof Error ? err.message : err}\n` +
-              `请先以调试端口启动 Chrome：/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --remote-debugging-port=9222`,
+              `请先以调试端口启动 Chrome：chrome --remote-debugging-port=9222` +
+              (process.platform === 'darwin'
+                ? `（macOS: /Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome）`
+                : ''),
           );
         });
       this.cdpBrowsers.set(endpoint, entry);

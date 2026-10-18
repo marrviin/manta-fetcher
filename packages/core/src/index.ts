@@ -45,6 +45,13 @@ export type {
 } from "./layout/boxTree.js";
 export { openPreviewPage, registerPreview } from "./layout/previewServer.js";
 export type { PreviewMeta } from "./layout/previewServer.js";
+export {
+  DEFAULT_SCORING_PARAMS,
+  DEFAULT_SCORING_FALLBACKS,
+  partialScoringParams,
+} from "./layout/scoring.js";
+export type { ScoringParams, ScoringFallbacks } from "./layout/scoring.js";
+export type { EnrichOptions } from "./layout/boxTree.js";
 
 export {
   ProfileRegistry,
@@ -58,9 +65,6 @@ export type {
   LoadedProfile,
   ProfileAction,
 } from "./profiles/schema.js";
-
-export { htmlToMarkdown } from "./markdown/domToMarkdown.js";
-export type { MarkdownOptions } from "./markdown/domToMarkdown.js";
 
 export { ImageManager } from "./images/manager.js";
 export type {

@@ -19,3 +19,6 @@ auth/
 # Editors
 .idea/
 *.swp
+
+# bench 基线引擎 venv（trafilatura）
+packages/bench/.venv

@@ -1,0 +1,213 @@
+{
+  "docHeight": 800,
+  "truncated": false,
+  "nodes": [
+    {
+      "rect": [
+        428,
+        28,
+        300,
+        25
+      ],
+      "role": "h3",
+      "runs": [
+        {
+          "t": "信息流条目一：短标题链接型内容"
+        }
+      ],
+      "fontSize": 18,
+      "color": "#000000",
+      "fontWeight": 600,
+      "importance": 0.73,
+      "level": 4,
+      "meta": {
+        "lineH": 25
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        428,
+        59,
+        300,
+        20
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "摘要文本，不超过两行，feed 页没有成段正文。"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#666666",
+      "fontWeight": 400,
+      "importance": 0.49,
+      "level": 3,
+      "meta": {
+        "lineH": 20
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        428,
+        85,
+        300,
+        17
+      ],
+      "role": "other",
+      "runs": [
+        {
+          "t": "来源 A · 3 小时前"
+        }
+      ],
+      "fontSize": 12,
+      "color": "#999999",
+      "fontWeight": 400,
+      "importance": 0.3,
+      "level": 2,
+      "meta": {
+        "inferred": true,
+        "lineH": 17
+      }
+    },
+    {
+      "rect": [
+        428,
+        127,
+        469,
+        25
+      ],
+      "role": "h3",
+      "runs": [
+        {
+          "t": "信息流条目二：同样是标题加摘要结构"
+        }
+      ],
+      "fontSize": 18,
+      "color": "#000000",
+      "fontWeight": 600,
+      "importance": 0.76,
+      "level": 4,
+      "meta": {
+        "lineH": 25
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        428,
+        158,
+        469,
+        20
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "第二条摘要，验证 pageType=feed 跳过核心区间后语义角色仍标记 body。"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#666666",
+      "fontWeight": 400,
+      "importance": 0.55,
+      "level": 3,
+      "meta": {
+        "lineH": 20
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        428,
+        184,
+        469,
+        17
+      ],
+      "role": "other",
+      "runs": [
+        {
+          "t": "来源 B · 5 小时前"
+        }
+      ],
+      "fontSize": 12,
+      "color": "#999999",
+      "fontWeight": 400,
+      "importance": 0.31,
+      "level": 2,
+      "meta": {
+        "inferred": true,
+        "lineH": 17
+      }
+    },
+    {
+      "rect": [
+        428,
+        226,
+        342,
+        25
+      ],
+      "role": "h3",
+      "runs": [
+        {
+          "t": "信息流条目三：第三条保持同样的样式节奏"
+        }
+      ],
+      "fontSize": 18,
+      "color": "#000000",
+      "fontWeight": 600,
+      "importance": 0.76,
+      "level": 4,
+      "meta": {
+        "lineH": 25
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        428,
+        257,
+        342,
+        20
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "第三条摘要，构成摘要样式的聚类文本量。"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#666666",
+      "fontWeight": 400,
+      "importance": 0.48,
+      "level": 3,
+      "meta": {
+        "lineH": 20
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        428,
+        283,
+        342,
+        17
+      ],
+      "role": "other",
+      "runs": [
+        {
+          "t": "来源 C · 昨天"
+        }
+      ],
+      "fontSize": 12,
+      "color": "#999999",
+      "fontWeight": 400,
+      "importance": 0.3,
+      "level": 2,
+      "meta": {
+        "inferred": true,
+        "lineH": 17
+      }
+    }
+  ]
+}

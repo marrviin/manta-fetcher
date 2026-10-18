@@ -1,0 +1,225 @@
+{
+  "docHeight": 885,
+  "truncated": false,
+  "nodes": [
+    {
+      "rect": [
+        320,
+        16,
+        640,
+        33
+      ],
+      "role": "h1",
+      "runs": [
+        {
+          "t": "自绘图注回归：紧贴图片的孤立短文本应按图注保留"
+        }
+      ],
+      "fontSize": 24,
+      "color": "#000000",
+      "fontWeight": 700,
+      "importance": 0.95,
+      "level": 5,
+      "meta": {
+        "lineH": 33
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        320,
+        65,
+        640,
+        58
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "第一段正文，交代图片位置。自绘图注是小字号灰字、紧贴图片下缘的孤立文本，不参与正文聚类，按启发式会归为 other 而丢失。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.6,
+      "level": 3,
+      "meta": {
+        "lineH": 29
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        400,
+        139,
+        480,
+        270
+      ],
+      "role": "img",
+      "img": "https://fixture.invalid/shot-1.png",
+      "importance": 1,
+      "level": 5,
+      "meta": {
+        "alt": "产品截图",
+        "naturalSize": [
+          480,
+          270
+        ]
+      }
+    },
+    {
+      "rect": [
+        320,
+        413,
+        640,
+        18
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "产品截图：场景选择页的卡片视图"
+        }
+      ],
+      "fontSize": 13,
+      "color": "#888888",
+      "fontWeight": 400,
+      "importance": 0.29,
+      "level": 2,
+      "meta": {
+        "inferred": true,
+        "lineH": 18
+      },
+      "body": false
+    },
+    {
+      "rect": [
+        320,
+        447,
+        640,
+        29
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "第二段正文，与图片之间保持常规段落间距（大于图注判定阈值），不应被误判为图注。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.54,
+      "level": 3,
+      "meta": {
+        "lineH": 29
+      },
+      "body": false
+    },
+    {
+      "rect": [
+        400,
+        492,
+        480,
+        270
+      ],
+      "role": "img",
+      "img": "https://fixture.invalid/shot-2.png",
+      "importance": 1,
+      "level": 5,
+      "meta": {
+        "alt": "对话界面",
+        "naturalSize": [
+          480,
+          270
+        ]
+      }
+    },
+    {
+      "rect": [
+        320,
+        766,
+        640,
+        18
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "对话界面：原谅值 11% 的成功案例"
+        }
+      ],
+      "fontSize": 13,
+      "color": "#888888",
+      "fontWeight": 400,
+      "importance": 0.3,
+      "level": 2,
+      "meta": {
+        "inferred": true,
+        "lineH": 18
+      },
+      "body": false
+    },
+    {
+      "rect": [
+        320,
+        808,
+        16,
+        16
+      ],
+      "role": "img",
+      "img": "https://fixture.invalid/icon-1.png",
+      "importance": 0.32,
+      "level": 2,
+      "meta": {
+        "naturalSize": [
+          16,
+          16
+        ]
+      }
+    },
+    {
+      "rect": [
+        342,
+        808,
+        108,
+        17
+      ],
+      "role": "other",
+      "runs": [
+        {
+          "t": "小图标标签不是图注"
+        }
+      ],
+      "fontSize": 12,
+      "color": "#999999",
+      "fontWeight": 400,
+      "importance": 0.16,
+      "level": 2,
+      "meta": {
+        "inferred": true,
+        "lineH": 17
+      }
+    },
+    {
+      "rect": [
+        320,
+        841,
+        640,
+        29
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "第三段正文收尾，锚定核心内容区间的底部边界。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.45,
+      "level": 3,
+      "meta": {
+        "lineH": 29
+      },
+      "body": false
+    }
+  ]
+}

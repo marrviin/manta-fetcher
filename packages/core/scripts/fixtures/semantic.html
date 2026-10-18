@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>语义标签完整页</title>
+<style>
+  body { margin: 0; font-family: sans-serif; }
+  .wrap { width: 756px; margin: 0 auto; padding: 40px 0; }
+  h1 { font-size: 32px; font-weight: 600; color: #252933; }
+  h2 { font-size: 22px; font-weight: 600; color: #252933; }
+  p, li, blockquote { font-size: 16px; color: #333; line-height: 1.75; }
+  blockquote { color: #666; border-left: 3px solid #ccc; margin-left: 0; padding-left: 12px; }
+  pre { background: #f6f6f6; padding: 12px; font-size: 14px; }
+  table { border-collapse: collapse; }
+  th, td { border: 1px solid #999; padding: 4px 8px; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>语义标签完整页：覆盖 h1-h6/p/pre/table/li/blockquote/img</h1>
+  <p>这是引言段落，包含<a href="https://example.com/link">一个普通链接</a>、<strong>加粗片段</strong>、<em>斜体</em>和<code>行内代码</code>。</p>
+  <h2>第一节：列表与引用</h2>
+  <ul>
+    <li>无序列表层级一</li>
+    <li>无序第二项
+      <ol>
+        <li>嵌套有序层级二</li>
+        <li>嵌套有序第二项</li>
+      </ol>
+    </li>
+    <li>无序第三项</li>
+  </ul>
+  <blockquote>这是一段引用块，字号与正文相同但颜色更浅，用于验证 blockquote 角色。</blockquote>
+  <h2>第二节：代码块与表格</h2>
+  <pre><code class="language-js">function greet(name) {
+  return `hello, ${name}`;
+}</code></pre>
+  <table>
+    <thead><tr><th>指标</th><th>优化前</th><th>优化后</th></tr></thead>
+    <tbody>
+      <tr><td>首屏时间</td><td>3200ms</td><td>1200ms</td></tr>
+      <tr><td>包体积</td><td>2.4MB</td><td>980KB</td></tr>
+    </tbody>
+  </table>
+  <p>结尾段落：验证正文聚类的收尾边界。这一段在表格之后，应参与核心内容区间的下界。</p>
+  <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22360%22%3E%3Crect%20width%3D%22640%22%20height%3D%22360%22%20fill%3D%22%23dde7ff%22%2F%3E%3Ctext%20x%3D%22320%22%20y%3D%22180%22%20text-anchor%3D%22middle%22%20font-size%3D%2224%22%3Efigure%3C%2Ftext%3E%3C%2Fsvg%3E" alt="示例插图" width="640" height="360">
+</div>
+</body>
+</html>

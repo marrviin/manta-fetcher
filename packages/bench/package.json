@@ -1,0 +1,25 @@
+{
+  "name": "@manta-fetcher/bench",
+  "version": "0.1.0",
+  "private": true,
+  "description": "抽取效果对比基准：manta 全管线 vs 基线引擎，含金样层 / 端到端层 / 理解层",
+  "type": "module",
+  "scripts": {
+    "bench": "tsx scripts/bench-run.mts",
+    "report": "tsx scripts/bench-report.mts",
+    "gold": "tsx scripts/bench-gold.mts",
+    "verify": "tsx scripts/profile-verify.mts"
+  },
+  "dependencies": {
+    "@manta-fetcher/core": "workspace:*",
+    "playwright": "^1.64.0"
+  },
+  "devDependencies": {
+    "@mozilla/readability": "^0.6.0",
+    "@types/jsdom": "^30.0.0",
+    "@types/turndown": "^5.0.6",
+    "jsdom": "^30.1.3",
+    "turndown": "^7.2.4",
+    "zod": "^4.6.7"
+  }
+}

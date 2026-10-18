@@ -33,7 +33,7 @@ const NavigationSchema = z.object({
   locale: z.string().optional(),
   /**
    * 浏览器后端：cdp:<endpoint> —— 连接用户真实 Chrome（需以 --remote-debugging-port 启动），
-   * 用于传输指纹级反爬站点（如携程 whaleguard）。连接对端无法指定 UA/viewport（以真实浏览器为准）。
+   * 用于传输指纹级反爬站点。连接对端无法指定 UA/viewport（以真实浏览器为准）。
    */
   browser: z.string().optional(),
 });
@@ -71,7 +71,7 @@ export const CompositeSpecSchema = z.object({
    */
   absolutizeUrl: z.boolean().optional(),
   /**
-   * 详情 URL 是会话级中转链（如搜狗 /link?url=，需同会话 JS 跳转到真实地址）时，
+   * 详情 URL 是会话级中转链（需同会话 JS 跳转到真实地址）时，
    * 在列表页同一 context 中打开跟随跳转，取最终 URL 交给 detailProfile 抓正文
    */
   resolveRedirect: z.boolean().optional(),
@@ -82,7 +82,7 @@ export const SiteProfileSchema = z.object({
   /** 站点标识，同时决定 auth/<name>.storage.json 与工具名 fetch_<name> */
   name: z.string().min(1),
   description: z.string().optional(),
-  /** URL 匹配模式，* 匹配任意字符，如 "https://juejin.cn/post/*" */
+  /** URL 匹配模式，* 匹配任意字符，如 "https://example.com/post/*" */
   match: z.array(z.string()).default([]),
   /** 可选的 JS Adapter 模块路径（相对 profile 文件），提供 prepare()/overrides */
   adapter: z.string().optional(),
@@ -98,6 +98,29 @@ export const SiteProfileSchema = z.object({
       remove: z.array(z.string()).optional(),
       /** 标题选择器，缺省用第一个 h1 或 document.title */
       title: z.string().optional(),
+    })
+    .optional(),
+
+  /**
+   * IR 布局管线的场景差异（缺省全部走引擎默认值，见 docs/layout-methodology.md）。
+   * 只开放模式开关 + 差异最大的两个阈值；其余评分参数留在引擎层不开放调参面
+   */
+  layout: z
+    .object({
+      /** 页面形态：article=文章正文（计算核心内容区间）；feed/list=信息流/列表页（跳过核心区间，body 由语义角色直接标记） */
+      pageType: z.enum(['article', 'feed', 'list']).default('article'),
+      /** 内容节点最小边长 px（引擎缺省 10） */
+      minSize: z.number().int().min(1).optional(),
+      /** 节点上限（引擎缺省 3000） */
+      maxNodes: z.number().int().min(1).optional(),
+      /** 文本截断长度，0 = 不截断（引擎缺省 0） */
+      textMax: z.number().int().min(0).optional(),
+      /** 视口外采集边距 px；null = 整页（引擎缺省整页，YAML 无法表达 Infinity） */
+      viewportMargin: z.number().int().min(0).nullable().optional(),
+      /** 正文聚类准入比例（覆盖 cluster.bodyClusterCharsRatio，引擎缺省 0.4） */
+      bodyClusterMinRatio: z.number().min(0).max(1).optional(),
+      /** 核心插图最小边长 px（覆盖 image.coreImgMinSide，引擎缺省 80） */
+      coreImgMinSide: z.number().int().min(1).optional(),
     })
     .optional(),
 
@@ -157,9 +180,9 @@ export interface ProfileAdapter {
 
 export interface LoadedProfile {
   def: SiteProfile;
-  /** MCP 工具名，如 fetch_juejin */
+  /** MCP 工具名，如 fetch_<site> */
   toolName: string;
-  /** 登录工具名，如 login_juejin */
+  /** 登录工具名，如 login_<site> */
   loginToolName: string;
   filePath: string;
   mtime: number;

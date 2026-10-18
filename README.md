@@ -59,6 +59,8 @@ MCP 客户端配置（如 `.mcp.json`）：
 
 传 `layout: true` 时返回**页面布局盒子模型 JSON**：只保留内容节点（有文本或图片），文本节点带字号/颜色/字重，并按重要性算法分级、以灰度梯度替换原色；**核心内容节点额外带 `body: true`**（主标题、各级小节标题、正文段落、导语/引用等样式化长文本、核心区间内的内容配图）。
 
+评分算法、参数表与校准工作流见 [packages/core/docs/layout-methodology.md](packages/core/docs/layout-methodology.md)。
+
 ```jsonc
 {
   "viewport": [1280, 800],
@@ -204,6 +206,24 @@ node packages/mcp/dist/index.js serve                 # 启动 MCP server（默�
 pnpm --filter @manta-fetcher/core exec tsx scripts/core-smoke.mts   # 引擎冒烟：嵌套字段 + 登录等待
 pnpm --filter @manta-fetcher/mcp exec tsx scripts/mcp-smoke.mts     # MCP 协议冒烟
 ```
+
+### 抽取效果对比基准（bench）
+
+manta 全管线 vs 基线引擎（浏览器直转 raw-turndown / Readability+Turndown）的双向对比，含可选大模型金样层。工件落 `~/.manta-fetcher/cache/bench/`：
+
+```bash
+pnpm --filter @manta-fetcher/bench exec tsx scripts/bench-run.mts              # 全量采集+对比（5 用例 × 3 引擎）
+pnpm --filter @manta-fetcher/bench exec tsx scripts/bench-run.mts --case juejin-article   # 单用例
+pnpm --filter @manta-fetcher/bench exec tsx scripts/bench-gold.mts --all       # 大模型金样（API 或 bundle 模式）
+pnpm --filter @manta-fetcher/bench exec tsx scripts/bench-gold.mts --case <n> --import <file>  # bundle 标注回填
+pnpm --filter @manta-fetcher/bench exec tsx scripts/bench-report.mts           # 离线重算（不出网）
+```
+
+每次运行（bench-run / bench-report）都会生成 `~/.manta-fetcher/cache/bench/report.html`——单文件报告页（聚合表、分 case 对比、一致性矩阵、跨次运行趋势图），浏览器直接打开；真实采集的历史按 jsonl 累积（`bench-history.jsonl`），离线重算不追加。
+
+单点 profile 体检：`pnpm --filter @manta-fetcher/bench exec tsx scripts/profile-verify.mts --url <url> [--profile <name>]`——任意 URL 的量化 PASS/FAIL（句子召回/bigram F1/字符比/标题图片命中，失败项带修法提示），是生成与调整 profile 的标准验证循环。
+
+指标：句子召回%、字符 bigram P/R/F1、引擎间一致性矩阵、结构计数 vs DOM 实数、字符比、金样内容 P/R/F1、标题/图片召回、噪音率。公平性：所有引擎解析同一份暖场后的页面快照（懒加载已回填）。金样与页面文本 hash 绑定，计数/推荐位抖动（正文 ≥90% 仍命中）自动自愈，正文真漂移判 stale。
 
 ## 通用管线的处理能力
 

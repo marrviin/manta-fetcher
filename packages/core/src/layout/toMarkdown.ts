@@ -76,8 +76,20 @@ function blockLines(
     case "heading":
       return [`## ${text}`]; // 启发式标题无层级信息，缺省二级
     case "p":
-    case "para":
+    case "para": {
+      // 裸自动链接段（可见文本就是链接 URL 本身）不是内容——36kr 相关推荐等模块
+      // 以裸链接渲染，正文段落不会整个是 URL
+      const runs = n.runs ?? [];
+      const plain = runs
+        .map((r) => r.t)
+        .join("")
+        .trim();
+      if (runs.length && runs.every((r) => r.href) && plain === runs[0]!.href)
+        return [];
+      // 纯日期/时间戳段是发布元信息（36kr 标题下的时间条），不是正文段落
+      if (/^\d{4}[-/年]\d{1,2}[-/月]\d{1,2}日?$/.test(plain)) return [];
       return text ? [text] : [];
+    }
     case "li": {
       const depth = Math.max(1, n.meta?.depth ?? 1);
       listCounters.length = Math.max(listCounters.length, depth);

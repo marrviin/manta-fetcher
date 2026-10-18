@@ -5,7 +5,7 @@ description: 使用 manta-fetcher MCP 完成网页内容采集的完整工作流
 
 # manta-fetcher 采集工作流
 
-manta-fetcher 是场景化网页采集 MCP：无头浏览器 + 站点 Profile 定制，采集固定产出**页面内容 IR**（JSON：块级节点 role + 行内 runs + 坐标/字号/重要性 + 图片节点；markdown/结构化字段为后续投影，当前阶段未产出）。核心原则：**场景定义全部在配置层（profiles/*.yaml），引擎代码零站点耦合**。
+manta-fetcher 是场景化网页采集 MCP：无头浏览器 + 站点 Profile 定制，采集产出**正文 Markdown + 结构化字段**（底层是页面内容 IR：块级节点 role + 行内 runs + 坐标/字号/重要性 + 图片节点，markdown 为其投影）。核心原则：**场景定义全部在配置层（profiles/*.yaml），引擎代码零站点耦合；无 profile 时通用管线兜底**。
 
 ## 前置检查
 
@@ -42,7 +42,7 @@ MCP 客户端接入（Claude Code 的 `.mcp.json`）：
 | `fetch_<site>` | 命中已配置场景的页面 |
 | `login_<site>` | 场景要求登录态时使用（会弹浏览器窗口，需用户操作） |
 
-> 组合工具（`fetch_<site>_top3` 类，列表 → 逐篇详情）依赖结构化字段/markdown 投影，IR-only 阶段暂不可用。
+> 组合工具（`fetch_<site>_top3` 类，列表 → 逐篇详情）依赖 composite 投影，暂未接入 MCP（引擎侧能力已备，接入后此条删除）。
 
 ### 通用参数（所有 fetch 工具）
 
@@ -70,13 +70,20 @@ preview      true → 启动本地预览 server 渲染布局（视觉校验 prof
 3. 登录态保存在 `auth/<site>.storage.json`，跨进程复用；**登录成功后直接重试原抓取**，无需用户再指挥
 4. 注意：登录检测按 profile 的 `sessionCookie` 优先，用户登录完成前工具不会提前返回（误判已堵上，但超时 5 分钟需提醒用户）
 
-## 二、验证还原度
+## 二、验证采集质量（量化，不靠目测）
 
-IR-only 阶段的校验手段：`preview: true` 走视觉预览（盒子落在正文位置、噪音被 remove 掉即正常）；
-或直接读 IR JSON 检查 role/runs（正文块应为 p/h1-h6/pre 且标 body，链接 href 在 runs 里）。
-`eval-fidelity.mts` 是旧 markdown 管线的评估器，IR 阶段暂不可用。
+| 手段 | 命令 | 用途 |
+|---|---|---|
+| 单点体检 | `./node_modules/.bin/tsx packages/bench/scripts/profile-verify.mts --url <url> [--profile <name>]` | 任意 URL 的量化 PASS/FAIL：句子召回、bigram F1、字符比、标题/图片命中，每项带修法提示。**调 profile 的标准循环** |
+| 效果基准 | `./node_modules/.bin/tsx packages/bench/scripts/bench-run.mts [--case <n>]` | manta vs 基线引擎对比（5 用例），改引擎/profile 后跑，防回归 |
+| 视觉预览 | fetch 工具 `preview: true` | 盒子落在正文位置、噪音被 remove 即正常 |
+| IR 回归 | `./node_modules/.bin/tsx packages/mcp/scripts/ir-regression.mts` | 线上页面快照逐字节对比，确认引擎改动零漂移 |
+
+体检的判定语义：参考系 = profile mainContent 的 DOM 文本（无 profile 用整页文本）；字符比 ≈1 最好，≪1 丢内容、≫1 混噪音。
 
 ## 三、沉淀新场景（新站点 → Profile）
+
+**完整生成工作流（探针 → YAML 草稿 → 机器验证闭环 → 回归）见 `profile-authoring` skill**，那里有每步的判据和失败模式速查表。以下为速览：
 
 三种站点形态，先探测再写配置：
 
@@ -117,7 +124,7 @@ navigation:
 extraction:
   mainContent: "<列表容器>"
   remove: ["<噪音>"]
-# structured/composite 字段 schema 仍接受，但 IR-only 阶段组合抓取暂不可用
+# structured 字段可用；composite（列表→详情链）暂未接入 MCP，schema 先接受配置
 ```
 
 ```yaml
@@ -141,6 +148,11 @@ extraction:
 | 中转链型（搜狗微信） | 详情链接是会话级 token + JS 跳转 | `composite.resolveRedirect: true`（同会话解析最终 URL）；UA 被拦时配 `navigation.userAgent` |
 
 ### 4. 校准与验证（防脏数据纪律）
+
+```bash
+# 标准循环：profile-verify 量化体检 → 失败项按提示修 YAML → 重跑，PASS 后做回归
+./node_modules/.bin/tsx packages/bench/scripts/profile-verify.mts --url <url> --profile <site>
+```
 
 ```bash
 # 采集一轮（saveTo 落盘 IR / preview 视觉校验）

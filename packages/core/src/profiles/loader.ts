@@ -18,6 +18,24 @@ export function sanitizeToolName(site: string): string {
   return t || 'site';
 }
 
+/** profile 段级深合并：yaml 字段优先；数组与函数整体替换；adapter.overrides 提供段内缺省 */
+function mergeProfile(
+  base: Record<string, unknown>,
+  override: Record<string, unknown>,
+): Record<string, unknown> {
+  const out: Record<string, unknown> = { ...base };
+  for (const [k, v] of Object.entries(override)) {
+    const b = out[k];
+    out[k] =
+      v !== null &&
+      b !== null &&
+      typeof v === 'object' && !Array.isArray(v) && typeof b === 'object' && !Array.isArray(b)
+        ? mergeProfile(b as Record<string, unknown>, v as Record<string, unknown>)
+        : v;
+  }
+  return out;
+}
+
 export class ProfileRegistry {
   private entries = new Map<string, LoadedProfile>();
   private mtimes = new Map<string, number>();
@@ -79,7 +97,11 @@ export class ProfileRegistry {
       const adapterPath = path.resolve(path.dirname(file), raw.adapter);
       const mod = (await import(pathToFileURL(adapterPath).href)) as { default?: ProfileAdapter } & ProfileAdapter;
       const adapter = mod.default ?? mod;
-      raw = { ...adapter.overrides, ...raw };
+      // 段级深合并：adapter.overrides 只补 yaml 未写的字段，不再整体覆盖同名段
+      raw = mergeProfile(
+        (adapter.overrides ?? {}) as Record<string, unknown>,
+        raw as unknown as Record<string, unknown>,
+      ) as Partial<SiteProfile> & ProfileAdapter;
       adapterPrepare = adapter.prepare;
     }
 

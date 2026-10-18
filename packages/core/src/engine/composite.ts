@@ -26,7 +26,7 @@ export interface CompositeDeps {
   fetchList: (url: string) => Promise<Record<string, unknown>>;
   /** 抓一个详情页 */
   fetchDetail: (url: string) => Promise<NonNullable<CompositeItem['detail']>>;
-  /** 可选：在列表页同一会话中解析中转跳转，返回最终 URL（如搜狗 /link?url= → mp.weixin.qq.com） */
+  /** 可选：在列表页同一会话中解析中转跳转，返回最终 URL */
   resolveRedirect?: (intermediateUrl: string, listUrl: string) => Promise<string>;
 }
 

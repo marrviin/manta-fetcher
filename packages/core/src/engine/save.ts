@@ -4,13 +4,11 @@ import { articlesCacheDir, coreVersion } from '../paths.js';
 import type { FetchResult } from './FetchEngine.js';
 
 export interface SaveLayoutOptions {
-  /** 保存根目录（缺省 ~/.manta-fetcher/cache/articles） */
-  dir?: string;
   /** 文件名 slug（缺省用页面标题，再退到 URL） */
   slug?: string;
   /**
-   * 落盘布局（统一规则）：
-   *   <dir>/<站点名>/<本地日期 YYYY-MM-DD>/<本地时间 HHmmss>-<slug>.layout.json
+   * 落盘布局（统一规则，目录固定在用户级）：
+   *   ~/.manta-fetcher/cache/articles/<站点名>/<本地日期 YYYY-MM-DD>/<本地时间 HHmmss>-<slug>.layout.json
    * 序号前缀由调用方通过 slug 传（如组合场景传 "01-标题"），单篇只传 slug。
    */
 }
@@ -55,16 +53,18 @@ function localStamp(d = new Date()): string {
   return `${localDate(d)} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
 }
 
-/** 落盘 IR 的 schema 版本：nodes 结构变化时递增；preview server 对不兼容版本跳过展示 */
-export const LAYOUT_SCHEMA_VERSION = 2;
+/** 落盘 IR 的 schema 版本：nodes 结构变化时递增；preview server 对不兼容版本跳过展示。
+ * v3 = IR v3：enrichLayout 参数化（scoring.ts）、lazyImgAttrs 可配置（新增 data-lazy 候选） */
+export const LAYOUT_SCHEMA_VERSION = 3;
 
 /**
- * 通用落盘（统一布局）：<dir>/<站点>/<本地日期>/<本地HHmmss>-<slug>.layout.json
+ * 通用落盘（目录固定在用户级，跨项目共享，preview server 扫描同目录）：
+ * ~/.manta-fetcher/cache/articles/<站点>/<本地日期>/<本地HHmmss>-<slug>.layout.json
  * 内容 = 页面元信息（含 schemaVersion/coreVersion，标记产出时的 IR 结构与 core 版本）+ 内容 IR。
  */
 export function saveLayout(result: FetchResult, opts: SaveLayoutOptions = {}): SavedLayout {
   const now = new Date();
-  const dir = path.resolve(opts.dir ?? articlesCacheDir, result.site, localDate(now));
+  const dir = path.resolve(articlesCacheDir, result.site, localDate(now));
   fs.mkdirSync(dir, { recursive: true });
   const slug = opts.slug ?? (result.title || slugFromUrl(result.url));
   const file = path.join(dir, `${localTime(now)}-${sanitizeSlug(slug)}.layout.json`);

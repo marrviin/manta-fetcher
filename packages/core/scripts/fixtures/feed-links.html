@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>信息流+热榜页</title>
+<style>
+  body { margin: 0; font-family: sans-serif; }
+  .wrap { width: 900px; margin: 0 auto; display: flex; gap: 24px; padding: 12px 0; }
+  nav a { font-size: 14px; color: #061b40; margin-right: 12px; }
+  nav { padding: 8px 0; }
+  .feed { width: 600px; }
+  .item h3 { margin: 0 0 6px; font-size: 18px; font-weight: 600; }
+  .item h3 a { color: #061b40; }
+  .item .digest { margin: 0; font-size: 14px; color: #666; }
+  .item { padding: 12px 0; border-bottom: 1px solid #eee; }
+  .hot { width: 276px; }
+  .hot h2 { font-size: 16px; margin: 0 0 8px; }
+  .hot-item { display: flex; gap: 8px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+  .hot-item .rank { font-size: 16px; font-weight: 600; color: #ff9f1a; }
+  .hot-item .t { font-size: 14px; color: #061b40; }
+  footer { padding: 12px 0; }
+  footer a { font-size: 12px; color: #999; margin-right: 12px; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="https://example.com/">首页</a>
+  <a href="https://example.com/hot">热榜</a>
+  <a href="https://example.com/topics">专题</a>
+</nav>
+<div class="wrap">
+  <div class="feed">
+    <div class="item">
+      <h3><a href="https://example.com/a/1">第一条：智能体框架迎来月度大版本更新</a></h3>
+      <p class="digest">摘要文本：本月发布的智能体框架重点升级了任务编排与工具调用链路，长任务成功率明显提升。</p>
+    </div>
+    <div class="item">
+      <h3><a href="https://example.com/a/2">第二条：开源多模态模型支持百万上下文窗口</a></h3>
+      <p class="digest">摘要文本：该模型在保留基础音频理解能力的同时引入空间感知，适用于座舱与家居场景。</p>
+    </div>
+    <div class="item">
+      <h3><a href="https://example.com/a/3">第三条：端侧推理引擎新版本压缩内存占用一半</a></h3>
+      <p class="digest">摘要文本：新引擎通过量化与算子融合把 3GB 内存的端侧模型压缩到一半，速度保持稳定。</p>
+    </div>
+  </div>
+  <div class="hot">
+    <h2>今日热榜</h2>
+    <a class="hot-item" href="https://example.com/h/11"><div class="rank">#1</div><div class="t">微软升级写作助手：支持任务委派与交互式报告生成</div></a>
+    <a class="hot-item" href="https://example.com/h/12"><div class="rank">#2</div><div class="t">腾讯上线创作者接单平台：支持需求发布与智能匹配结算</div></a>
+    <a class="hot-item" href="https://example.com/h/13"><div class="rank">#3</div><div class="t">数学家凭量化交易跻身富豪榜第八，身家超过千亿规模</div></a>
+    <a class="hot-item" href="https://example.com/h/14"><div class="rank">#4</div><div class="t">大模型默认上下文窗口扩容至五十万，长文本调用免费</div></a>
+  </div>
+</div>
+<footer>
+  <a href="https://example.com/en">English</a>
+  <a href="https://example.com/zh">简体中文</a>
+</footer>
+</body>
+</html>

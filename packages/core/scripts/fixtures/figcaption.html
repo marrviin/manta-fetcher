@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>图注页</title>
+<style>
+  body { margin: 0; font-family: sans-serif; }
+  main { width: 640px; margin: 0 auto; }
+  h1 { font-size: 24px; }
+  p { font-size: 16px; color: #333; line-height: 1.8; }
+  figure { margin: 16px 0; }
+  figure img { width: 480px; height: 270px; display: block; }
+  figcaption { font-size: 13px; color: #888; padding-top: 6px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>图注语义标签回归：figcaption 不应被当噪音丢弃</h1>
+  <p>第一段正文，说明图注使用 figure 与 figcaption 语义标签的场景。图注字号小且为灰色，不参与正文聚类，若按启发式段落归位会被整段丢弃。</p>
+  <figure>
+    <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22480%22%20height%3D%22270%22%3E%3Crect%20width%3D%22480%22%20height%3D%22270%22%20fill%3D%22%23ddeeff%22%2F%3E%3C%2Fsvg%3E" alt="界面截图">
+    <figcaption>界面截图：首页各场景卡片视图</figcaption>
+  </figure>
+  <p>第二段正文，位于图片之后，用于锚定核心内容区间的底部边界，保证图注落在核心区间内。</p>
+  <figure>
+    <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22480%22%20height%3D%22270%22%3E%3Crect%20width%3D%22480%22%20height%3D%22270%22%20fill%3D%22%23eeffdd%22%2F%3E%3C%2Fsvg%3E" alt="对话界面">
+    <figcaption>对话界面：原谅值 11% 的成功哄人案例</figcaption>
+  </figure>
+  <p>第三段正文收尾，验证多个图注均按语义角色 p 输出且标记 body。</p>
+</main>
+</body>
+</html>

@@ -24,8 +24,8 @@ const FETCH_INPUT_SCHEMA = {
   properties: {
     url: { type: 'string', description: '要抓取的页面 URL' },
     saveTo: {
-      type: 'string',
-      description: '保存目录（相对工作目录，如 cache/layouts）：把内容 IR JSON 落盘，返回中附保存路径',
+      type: 'boolean',
+      description: '传 false 跳过落盘。缺省落盘到用户级目录 ~/.manta-fetcher/cache/articles（目录固定，不可自定义）',
     },
     saveSlug: { type: 'string', description: '落盘文件名 slug，缺省用页面标题' },
     preview: {
@@ -181,10 +181,10 @@ export async function serve(): Promise<void> {
         });
       }
 
-      // saveTo：IR JSON 落盘
-      if (typeof args?.saveTo === 'string' && args.saveTo) {
+      // 默认落盘：IR 是采集的固定产出，目录固定在用户级 ~/.manta-fetcher/cache/articles
+      // （preview 左侧列表会现扫该目录）；saveTo: false 显式跳过
+      if (args?.saveTo !== false && args?.saveTo !== 'false') {
         const saved = saveLayout(result, {
-          dir: args.saveTo,
           slug:
             typeof args?.saveSlug === 'string' && args.saveSlug
               ? args.saveSlug

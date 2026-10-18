@@ -1,0 +1,196 @@
+{
+  "docHeight": 800,
+  "truncated": false,
+  "nodes": [
+    {
+      "rect": [
+        262,
+        40,
+        756,
+        40
+      ],
+      "role": "heading",
+      "runs": [
+        {
+          "t": "这个页面没有任何语义标签：全部是 div 和 span"
+        }
+      ],
+      "fontSize": 28,
+      "color": "#1a1a1a",
+      "fontWeight": 600,
+      "importance": 1,
+      "level": 5,
+      "meta": {
+        "inferred": true,
+        "lineH": 40
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        80,
+        756,
+        18
+      ],
+      "role": "other",
+      "runs": [
+        {
+          "t": "发布于 2026-10-17 · 阅读量 12,000 · 作者字段"
+        }
+      ],
+      "fontSize": 13,
+      "color": "#999999",
+      "fontWeight": 400,
+      "importance": 0.3,
+      "level": 2,
+      "meta": {
+        "inferred": true,
+        "lineH": 18
+      }
+    },
+    {
+      "rect": [
+        262,
+        98,
+        756,
+        44
+      ],
+      "role": "para",
+      "runs": [
+        {
+          "t": "第一段正文。无语义页面的块识别完全依赖启发式：字号聚类找出正文参考，Paragraph 角色由 inferred 标记。这一段与后续段落使用完全相同的样式，构成正文聚类的主要文本量。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.6,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 22
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        142,
+        756,
+        44
+      ],
+      "role": "para",
+      "runs": [
+        {
+          "t": "第二段正文，同样式同颜色，继续为正文聚类贡献字符数。启发式应当把这些 div 归位为 para 角色并标记 body。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.6,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 22
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        186,
+        756,
+        28
+      ],
+      "role": "heading",
+      "runs": [
+        {
+          "t": "小节标题：字号大于正文参考，应被归位为 heading"
+        }
+      ],
+      "fontSize": 20,
+      "color": "#1a1a1a",
+      "fontWeight": 600,
+      "importance": 0.7,
+      "level": 4,
+      "meta": {
+        "inferred": true,
+        "lineH": 28
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        214,
+        756,
+        44
+      ],
+      "role": "para",
+      "runs": [
+        {
+          "t": "小节之后的正文段落，回到正文聚类的字号与颜色。聚类算法要求同 fontSize 加同 color 才会合入同一簇，这一段与开头两段一致。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.6,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 22
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        258,
+        756,
+        22
+      ],
+      "role": "para",
+      "runs": [
+        {
+          "t": "最后一段正文，用于确定核心内容区间的下界。启发式路径下主标题为正文起点之上字号最大的节点。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.56,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 22
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        0,
+        320,
+        1280,
+        66
+      ],
+      "role": "other",
+      "runs": [
+        {
+          "t": "页脚导航 · 关于我们 · 联系方式 · 备案号占位文本"
+        }
+      ],
+      "fontSize": 13,
+      "color": "#aaaabb",
+      "fontWeight": 400,
+      "importance": 0.28,
+      "level": 2,
+      "meta": {
+        "inferred": true,
+        "lineH": 66
+      }
+    }
+  ]
+}
