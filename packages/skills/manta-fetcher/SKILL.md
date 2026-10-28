@@ -12,9 +12,9 @@ manta-fetcher 是场景化网页采集 MCP：无头浏览器 + 站点 Profile �
 首次使用前确认环境就绪（在仓库根目录执行）：
 
 ```bash
-ls profiles/                  # 已有场景配置
+ls profiles/                  # 示例模板（不自动加载；用户自建放 <落盘根>/profiles/）
 ls packages/mcp/dist/index.js # 已编译；没有则 pnpm build
-./node_modules/.bin/tsx packages/mcp/scripts/mcp-smoke.mts   # 冒烟：能列出工具即正常
+MANTA_FETCHER_PROFILES_DIR=$PWD/profiles ./node_modules/.bin/tsx packages/mcp/scripts/mcp-smoke.mts   # 冒烟（env 指向模板 profiles）
 ```
 
 MCP 客户端接入（Claude Code 的 `.mcp.json`）：
@@ -25,7 +25,7 @@ MCP 客户端接入（Claude Code 的 `.mcp.json`）：
     "manta-fetcher": {
       "command": "node",
       "args": ["/绝对路径/manta-fetcher/packages/mcp/dist/index.js"],
-      "cwd": "/工作目录"   // profiles/、auth/、cache/ 都按此目录解析
+      "cwd": "/工作目录"   // 决定落盘根：git 项目内用 <项目根>/.manta-fetcher，否则 ~/.manta-fetcher
     }
   }
 }
@@ -112,7 +112,7 @@ EOF
 ### 2. 写 Profile（列表页 + 详情页各一个 YAML）
 
 ```yaml
-# profiles/<site>-list.yaml — 列表页
+# <落盘根>/profiles/<site>-list.yaml — 列表页
 name: <site>-list
 description: <一句话说明，会直接成为 MCP 工具描述>
 match: ["https://<站点>/list*"]
@@ -128,7 +128,7 @@ extraction:
 ```
 
 ```yaml
-# profiles/<site>-article.yaml — 详情页
+# <落盘根>/profiles/<site>-article.yaml — 详情页
 name: <site>-article
 match: ["https://<站点>/detail/*"]
 extraction:

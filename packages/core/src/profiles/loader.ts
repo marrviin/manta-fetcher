@@ -40,34 +40,37 @@ export class ProfileRegistry {
   private entries = new Map<string, LoadedProfile>();
   private mtimes = new Map<string, number>();
 
-  constructor(private dir: string = profilesDir) {}
+  /** 扫描用户 profiles 目录（默认 profilesDir，可用 MANTA_FETCHER_PROFILES_DIR 改指其他目录，如开发时的仓库模板） */
+  constructor(private dirs: string[] = [profilesDir]) {}
 
   /** 扫描目录，只重新加载变化的文件，返回本次变化的站点名 */
   async reload(): Promise<string[]> {
     const changed: string[] = [];
-    if (!fs.existsSync(this.dir)) return changed;
-
-    const files = fs
-      .readdirSync(this.dir)
-      .filter((f) => PROFILE_EXTS.has(path.extname(f)) && !f.startsWith('.'))
-      .map((f) => path.join(this.dir, f));
 
     const seen = new Set<string>();
-    for (const file of files) {
-      const mtime = fs.statSync(file).mtimeMs;
-      seen.add(file);
-      if (this.mtimes.get(file) === mtime) continue;
-      this.mtimes.set(file, mtime);
-      try {
-        const loaded = await this.loadFile(file, mtime);
-        if (loaded) {
-          this.entries.set(loaded.def.name, loaded);
-          changed.push(loaded.def.name);
+    for (const dir of this.dirs) {
+      if (!fs.existsSync(dir)) continue;
+      const files = fs
+        .readdirSync(dir)
+        .filter((f) => PROFILE_EXTS.has(path.extname(f)) && !f.startsWith('.'))
+        .map((f) => path.join(dir, f));
+
+      for (const file of files) {
+        const mtime = fs.statSync(file).mtimeMs;
+        seen.add(file);
+        if (this.mtimes.get(file) === mtime) continue;
+        this.mtimes.set(file, mtime);
+        try {
+          const loaded = await this.loadFile(file, mtime);
+          if (loaded) {
+            this.entries.set(loaded.def.name, loaded);
+            changed.push(loaded.def.name);
+          }
+        } catch (err) {
+          // 单个 profile 坏掉不影响其他站点
+          console.error(`[manta-fetcher] 加载 profile 失败: ${file}\n  ${err instanceof Error ? err.message : err}`);
+          this.entries.delete(path.basename(file));
         }
-      } catch (err) {
-        // 单个 profile 坏掉不影响其他站点
-        console.error(`[manta-fetcher] 加载 profile 失败: ${file}\n  ${err instanceof Error ? err.message : err}`);
-        this.entries.delete(path.basename(file));
       }
     }
     // 文件被删除时移除对应 profile

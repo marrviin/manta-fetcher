@@ -12,20 +12,27 @@ import {
   registerPreview,
 } from '@manta-fetcher/core';
 import type { PageLayout, PreviewMeta } from '@manta-fetcher/core';
+import { runInit } from './cli/init.js';
 
 const USAGE = `manta-fetcher — 场景化网页采集 MCP
 
 用法:
   manta-fetcher serve              启动 MCP server（stdio，默认）
+  manta-fetcher init [--no-mcp] [--no-skill]
+                                   把 MCP server 写进本机已安装 AI 客户端的配置
+                                   （Claude Code / Cursor / Gemini CLI / Codex / JoyCode），
+                                   并把 packages/skills 下的采集 Skill 装到客户端 skill 目录
   manta-fetcher login <站点名> <起始URL>
                                    打开有头浏览器手动登录，回车后保存登录态到 auth/<站点名>.storage.json
   manta-fetcher test <URL> [站点名] [--save] [--preview]
                                    抓取一次并把内容 IR 输出到 stdout（调 Profile 时用，不用启动 MCP）；
-                                   --save 落盘到用户级采集目录（~/.manta-fetcher/cache/articles）；
+                                   --save 落盘到采集目录（git 项目内 <项目根>/.manta-fetcher/cache/articles，
+                                   否则 <cwd>/.manta-fetcher/cache/articles）；
                                    --preview 额外启动本地预览 server 渲染布局并自动打开浏览器
   manta-fetcher preview [<URL | layout.json 路径>] [--dir <目录>]
                                    启动本地预览 server 渲染布局并自动打开浏览器；
-                                   不带参数：批量加载落盘目录（默认 ~/.manta-fetcher/cache/articles）
+                                   不带参数：批量加载落盘目录（默认同 --save，git 项目内
+                                   <项目根>/.manta-fetcher/cache/articles，否则 <cwd>/.manta-fetcher/cache/articles）
                                    下所有布局 JSON，左侧列表可切换，最新的一份默认展示；
                                    传 layout.json 路径则离线加载不重新抓取；传 URL 会先抓取
 
@@ -45,6 +52,8 @@ export async function runCli(cmd: string | undefined, args: string[]): Promise<v
       return;
     case 'login':
       return cmdLogin(args);
+    case 'init':
+      return runInit(args);
     case 'test':
       return cmdTest(args);
     case 'preview':
@@ -119,7 +128,7 @@ async function cmdTest(args: string[]): Promise<void> {
 
 /**
  * 视觉预览：启动本地预览 server 渲染布局并自动打开浏览器（实现见 core/layout/previewServer.ts）。
- * 不带参数：批量加载落盘目录 ~/.manta-fetcher/cache/articles（--dir 可改）下所有布局 JSON，
+ * 不带参数：批量加载落盘目录（同 --save 规则，见上；--dir 可改）下所有布局 JSON，
  * 左侧列表可切换；带文件路径：离线加载该 JSON；带 URL：抓取后预览（可选第二参数指定站点名）。
  */
 async function cmdPreview(args: string[]): Promise<void> {
@@ -134,7 +143,7 @@ async function cmdPreview(args: string[]): Promise<void> {
   }
 
   if (!input && !dir) {
-    // 无参数：落盘目录由预览 server 自行扫描展示（~/.manta-fetcher/cache/articles），直接开页面即可
+    // 无参数：落盘目录由预览 server 自行扫描展示（dataRoot/cache/articles），直接开页面即可
     const count = countLayoutFiles(articlesCacheDir);
     if (count === 0) {
       console.error(

@@ -9,7 +9,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { BrowserPool, effectiveProfile, FetchEngine, ProfileRegistry } from '@manta-fetcher/core';
+import { fileURLToPath } from 'node:url';
+import { BrowserPool, effectiveProfile, FetchEngine, ProfileRegistry, profilesDir } from '@manta-fetcher/core';
+
+// 仓库内 dev 脚本：用户 profiles 目录之外，额外扫描仓库根模板 profiles/（快照即按模板语义采集）
+const repoTemplatesDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../profiles');
 
 const SNAPSHOT_DIR = path.join(os.homedir(), '.manta-fetcher', 'cache', 'ir-snapshots');
 const capture = process.argv.includes('capture');
@@ -21,7 +25,7 @@ const CASES: { name: string; url: string }[] = [
   { name: 'juejin-post-code', url: 'https://juejin.cn/post/7488201614714863631' },
 ];
 
-const registry = new ProfileRegistry();
+const registry = new ProfileRegistry([repoTemplatesDir, profilesDir]);
 await registry.reload();
 const pool = new BrowserPool(1);
 const engine = new FetchEngine(pool);

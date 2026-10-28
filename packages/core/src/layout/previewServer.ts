@@ -30,7 +30,7 @@ const entries = new Map<string, PreviewEntry>();
 let server: http.Server | null = null;
 let listening: Promise<number> | null = null;
 
-/** 落盘扫描根目录（与 saveLayout 缺省目录一致，用户级 ~/.manta-fetcher/cache/articles） */
+/** 落盘扫描根目录（与 saveLayout 缺省目录一致，dataRoot/cache/articles，见 paths.ts） */
 const SAVE_ROOT = articlesCacheDir;
 const SAVED_PREFIX = 'saved:';
 

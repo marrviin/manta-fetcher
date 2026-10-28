@@ -25,7 +25,8 @@ const FETCH_INPUT_SCHEMA = {
     url: { type: 'string', description: '要抓取的页面 URL' },
     saveTo: {
       type: 'boolean',
-      description: '传 false 跳过落盘。缺省落盘到用户级目录 ~/.manta-fetcher/cache/articles（目录固定，不可自定义）',
+      description:
+        '传 false 跳过落盘。缺省落盘到 cache/articles（在 git 项目内为 <项目根>/.manta-fetcher/cache/articles，否则为启动目录 <cwd>/.manta-fetcher/cache/articles；目录固定，不可自定义）',
     },
     saveSlug: { type: 'string', description: '落盘文件名 slug，缺省用页面标题' },
     preview: {
@@ -181,7 +182,7 @@ export async function serve(): Promise<void> {
         });
       }
 
-      // 默认落盘：IR 是采集的固定产出，目录固定在用户级 ~/.manta-fetcher/cache/articles
+      // 默认落盘：IR 是采集的固定产出，目录固定在项目级 dataRoot/cache/articles
       // （preview 左侧列表会现扫该目录）；saveTo: false 显式跳过
       if (args?.saveTo !== false && args?.saveTo !== 'false') {
         const saved = saveLayout(result, {

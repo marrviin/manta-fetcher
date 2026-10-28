@@ -15,13 +15,16 @@
 packages/
   core/   # 采集引擎，不依赖 MCP：BrowserPool / FetchEngine / Profile / DOM→Markdown / 图片
   mcp/    # MCP server（stdio）+ CLI（manta-fetcher serve|login|test）
-profiles/ # 站点 Profile（yaml 为主，可挂 JS Adapter），热加载
+profiles/ # 站点 Profile 示例模板（yaml 为主，可挂 JS Adapter）——不自动加载，复制到用户 profiles 目录生效
 packages/skills/manta-fetcher/ # 使用技能：接入 MCP → 布置任务 → 验证还原度 → 沉淀新场景
 auth/     # 各站点登录态（storageState）
 cache/    # images/ 下载的图片、screenshots/ 失败诊断截图
 ```
 
-配置目录（`profiles/`、`auth/`、`cache/`）按**进程启动时的 cwd** 解析——在哪个目录启动 MCP server，就在哪个目录读写。
+目录解析规则：
+
+- **profiles**：不随包内置，由用户自建，放 `<落盘根>/profiles`（在 git 项目内为 `<项目根>/.manta-fetcher/profiles`，否则 `~/.manta-fetcher/profiles`），热加载；仓库根 `profiles/` 仅作示例模板，可用环境变量 `MANTA_FETCHER_PROFILES_DIR` 临时指向它做开发调试。
+- **落盘产物 / 登录态**：产物（articles、screenshots）跟随 git 项目（`<项目根>/.manta-fetcher/cache/`），不在任何 git 仓库内时回退 `~/.manta-fetcher/cache/`；登录态始终在 `~/.manta-fetcher/auth/`。
 
 ## 快速开始
 
@@ -39,7 +42,7 @@ MCP 客户端配置（如 `.mcp.json`）：
     "manta-fetcher": {
       "command": "node",
       "args": ["/绝对路径/manta-fetcher/packages/mcp/dist/index.js"],
-      "cwd": "/你的工作目录"   // profiles/auth/cache 都在这里
+      "cwd": "/你的工作目录"   // 决定落盘根：git 项目内用 <项目根>/.manta-fetcher，否则 ~/.manta-fetcher
     }
   }
 }
@@ -118,7 +121,7 @@ MCP 客户端配置（如 `.mcp.json`）：
 
 ## Site Profile
 
-在 `profiles/` 下新增 `.yaml`（或 `.js`）文件即可，热加载，无需重启。
+在用户 profiles 目录（git 项目内 `<项目根>/.manta-fetcher/profiles/`，否则 `~/.manta-fetcher/profiles/`）下新增 `.yaml`（或 `.js`）文件即可，热加载，无需重启。可参考仓库根 `profiles/` 下的示例模板。
 
 ```yaml
 name: juejin

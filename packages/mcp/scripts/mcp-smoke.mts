@@ -6,6 +6,7 @@ const transport = new StdioClientTransport({
   command: process.execPath,
   args: [path.resolve('packages/mcp/dist/index.js')],
   cwd: process.cwd(),
+  env: { ...process.env } as Record<string, string>, // 透传 MANTA_FETCHER_PROFILES_DIR 等给 server 子进程
 });
 const client = new Client({ name: 'smoke', version: '0.0.0' });
 await client.connect(transport);

@@ -32,11 +32,12 @@ if (!url) {
 }
 const slug = `${(profileName ?? 'generic').replace(/[^a-z0-9-]/gi, '')}-${Date.now().toString(36)}`;
 
-const { BrowserPool, FetchEngine, ProfileRegistry, effectiveProfile } = await import('@manta-fetcher/core');
+const { BrowserPool, FetchEngine, ProfileRegistry, effectiveProfile, profilesDir } = await import('@manta-fetcher/core');
 const { captureCase, caseDir } = await import('../src/capture.mts');
 const { buildCaseReport } = await import('../src/report.mts');
 
-const registry = new ProfileRegistry();
+// dev 脚本：额外扫描仓库根模板 profiles/（与 bench-run 一致）
+const registry = new ProfileRegistry([path.join(repoRoot, "profiles"), profilesDir]);
 await registry.reload();
 if (profileName && !registry.byName(profileName)) {
   console.error(`✗ profile 不存在: ${profileName}（写好 profiles/<name>.yaml 后重跑；YAML 语法错误也会表现为查不到）`);
@@ -103,9 +104,11 @@ try {
     },
     {
       item: '图片保留（内容图）',
-      value: `${e.structure.md.images}/${e.structure.dom.images}（dom 为全页数，含头像/推荐图）`,
-      pass: e.structure.dom.images === 0 || e.structure.md.images >= 1,
-      hint: '输出 0 图且 dom 有图 → 懒加载属性未覆盖或 mainContent 范围错了',
+      value: `${e.structure.md.images}/${e.structure.dom.coreImages ?? e.structure.dom.images}（参考为 mainContent 内短边≥80 的内容图，无 profile 时为全页数）`,
+      pass:
+        (e.structure.dom.coreImages ?? e.structure.dom.images) === 0 ||
+        e.structure.md.images >= 1,
+      hint: '输出 0 图且主内容区有内容图 → 懒加载属性未覆盖或 mainContent 范围错了',
     },
   ];
 

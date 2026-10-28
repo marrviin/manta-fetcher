@@ -12,6 +12,7 @@ import {
 } from "../layout/boxTree.js";
 import { screenshotsDir, storageStatePath } from "../paths.js";
 import { partialScoringParams } from "../layout/scoring.js";
+import { ImageManager, type InlineImage } from "../images/manager.js";
 import { ensureDir } from "../paths.js";
 import path from "node:path";
 
@@ -33,6 +34,8 @@ export interface EffectiveProfile {
   storageState?: string;
   /** 抓取后 URL 命中该正则 → 登录态失效 */
   loginRedirect?: string;
+  /** 图片处理：download=下载到本地并重写路径；inline=小图内联；缺省 keep-url */
+  images?: SiteProfile["images"];
   /** CDP 接管端点：连接用户真实 Chrome（传输指纹级反爬站点用） */
   cdpEndpoint?: string;
   prepare?: (
@@ -70,6 +73,7 @@ export function effectiveProfile(def: SiteProfile | null): EffectiveProfile {
       ? path.resolve(def.auth.storageState)
       : storageStatePath(name),
     loginRedirect: def?.auth?.loginRedirect,
+    images: def?.images,
     cdpEndpoint: parseCdpEndpoint(def?.navigation?.browser),
   };
 }
@@ -79,9 +83,13 @@ export interface FetchResult {
   title: string;
   url: string;
   site: string;
-  /** 内容 IR：块级节点（role + runs + 坐标/字号/重要性）+ 图片节点 */
+  /** 内容 IR：块级节点（role + runs + 坐标/字号/重要性）+ 图片节点（download/inline 模式下 img 已重写） */
   layout: PageLayout;
   screenshotPath?: string;
+  /** 图片清单（download 模式含 local 本地路径；keep-url 模式不产出） */
+  images?: { src: string; alt: string; local?: string }[];
+  /** inline 模式下与 #img-N 占位对应的图片内容块 */
+  inlineImages?: InlineImage[];
 }
 
 export class FetchEngine {
@@ -147,12 +155,37 @@ export class FetchEngine {
         pageType: eff.layout?.pageType,
       });
 
+      // 图片处理（趁页面 context 还在：请求自带 cookie/referer 过防盗链）。
+      // 重写 IR 内 img 字段，markdown 投影自然使用本地路径/占位符；失败项保留原始 URL
+      let images: FetchResult["images"];
+      let inlineImages: FetchResult["inlineImages"];
+      const imgMode = eff.images?.mode;
+      if (imgMode === "download" || imgMode === "inline") {
+        const items = extracted.layout.nodes
+          .filter((n) => n.role === "img" && n.img)
+          .map((n) => ({ src: n.img as string, alt: n.meta?.alt ?? "" }));
+        const mgr = new ImageManager(eff.name, imgMode, {
+          saveDir: eff.images?.saveDir,
+          inlineMaxBytes: eff.images?.inlineMaxBytes,
+        });
+        const res = await mgr.process(items, context);
+        for (const n of extracted.layout.nodes) {
+          if (n.role === "img" && n.img && res.rewrite.has(n.img)) {
+            n.img = res.rewrite.get(n.img) as string;
+          }
+        }
+        images = res.resolved;
+        inlineImages = res.inline.length ? res.inline : undefined;
+      }
+
       return {
         title: extracted.title,
         url: extracted.url,
         site: eff.name,
         layout: extracted.layout,
         screenshotPath,
+        images,
+        inlineImages,
       };
     } catch (err) {
       // 失败截图，路径带回给调用方便于诊断

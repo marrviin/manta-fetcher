@@ -5,8 +5,12 @@ node_modules/
 dist/
 *.tsbuildinfo
 
+# Profiles（站点采集规则，按站点本地维护）
+profiles/
+
 # Runtime output (fetched articles, images, etc.)
 cache/
+.manta-fetcher/
 *.log
 
 # Auth / login state (cookies — never commit)
@@ -16,9 +20,10 @@ auth/
 # OS
 .DS_Store
 
-# Editors
+# Editors / local config
 .idea/
 *.swp
+.mcp.json
 
 # bench 基线引擎 venv（trafilatura）
 packages/bench/.venv

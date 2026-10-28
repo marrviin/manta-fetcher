@@ -1405,6 +1405,26 @@ export function enrichLayout(
   // 阅读顺序
   nodes.sort((a, b) => a.rect[1] - b.rect[1] || a.rect[0] - b.rect[0]);
 
+  // feed/list 页无核心区间，图片节点拿不到 body 标记，feed 卡片缩略图永远进不了投影。
+  // 与 body 文本节点同行（垂直重叠过半 + 水平间距 ≤150px）的图片随条目标 body；
+  // article 页不受影响（coreBottom ≥ 0 时图片走核心区间判定）。
+  if (coreBottom < 0) {
+    const bodyRects = nodes
+      .filter((n) => n.body && n.role !== "img")
+      .map((n) => n.rect);
+    for (const n of nodes) {
+      if (n.role !== "img" || n.body) continue;
+      const [ix, iy, iw, ih] = n.rect;
+      const inBodyRow = bodyRects.some(([tx, ty, tw, th]) => {
+        const vOverlap = Math.min(iy + ih, ty + th) - Math.max(iy, ty);
+        if (vOverlap < Math.min(ih, th) * 0.5) return false;
+        const hGap = Math.max(ix - (tx + tw), tx - (ix + iw));
+        return hGap <= 150;
+      });
+      if (inBodyRow) n.body = true;
+    }
+  }
+
   // 标题：浏览器侧已按 titleSelector → h1 → document.title 提取（RawPass.title）
   return {
     title: pass.title,

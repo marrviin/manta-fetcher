@@ -77,9 +77,19 @@ async function dumpSnapshot(
     }
     // 主内容区参考文本（独立于任何引擎的评分，仅按 profile 选择器取 DOM 文本）
     let coreText = '';
+    let coreImages = 0;
     if (mc) {
       try {
-        coreText = document.querySelector(mc)?.innerText || '';
+        const coreEl = document.querySelector(mc);
+        coreText = coreEl?.innerText || '';
+        // 内容图参考：mainContent 内、短边 ≥ 80（对齐引擎 image.coreImgMinSide 缺省值）的可见图
+        if (coreEl) {
+          for (const img of Array.from(coreEl.querySelectorAll('img'))) {
+            if (!visible(img)) continue;
+            const r = img.getBoundingClientRect();
+            if (Math.min(r.width, r.height) >= 80) coreImages++;
+          }
+        }
       } catch {
         coreText = '';
       }
@@ -94,6 +104,7 @@ async function dumpSnapshot(
         links: Array.from(document.querySelectorAll('a[href]')).filter(visible).length,
         tables: document.querySelectorAll('table').length,
         textChars: (document.body?.innerText || '').replace(/\s+/g, '').length,
+        coreImages,
       },
     };
   }, { mc: mainContent, lazyFill });

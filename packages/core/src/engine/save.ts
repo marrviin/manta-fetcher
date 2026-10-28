@@ -7,8 +7,8 @@ export interface SaveLayoutOptions {
   /** 文件名 slug（缺省用页面标题，再退到 URL） */
   slug?: string;
   /**
-   * 落盘布局（统一规则，目录固定在用户级）：
-   *   ~/.manta-fetcher/cache/articles/<站点名>/<本地日期 YYYY-MM-DD>/<本地时间 HHmmss>-<slug>.layout.json
+   * 落盘布局（统一规则，落盘根 = dataRoot，git 项目内为 <项目根>/.manta-fetcher，否则 <cwd>/.manta-fetcher）：
+   *   <落盘根>/cache/articles/<站点名>/<本地日期 YYYY-MM-DD>/<本地时间 HHmmss>-<slug>.layout.json
    * 序号前缀由调用方通过 slug 传（如组合场景传 "01-标题"），单篇只传 slug。
    */
 }
@@ -59,7 +59,7 @@ export const LAYOUT_SCHEMA_VERSION = 3;
 
 /**
  * 通用落盘（目录固定在用户级，跨项目共享，preview server 扫描同目录）：
- * ~/.manta-fetcher/cache/articles/<站点>/<本地日期>/<本地HHmmss>-<slug>.layout.json
+ * <落盘根>/cache/articles/<站点>/<本地日期>/<本地HHmmss>-<slug>.layout.json
  * 内容 = 页面元信息（含 schemaVersion/coreVersion，标记产出时的 IR 结构与 core 版本）+ 内容 IR。
  */
 export function saveLayout(result: FetchResult, opts: SaveLayoutOptions = {}): SavedLayout {

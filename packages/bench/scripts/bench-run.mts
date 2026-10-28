@@ -22,7 +22,7 @@ if (!fs.existsSync(path.join(repoRoot, 'profiles'))) {
 }
 if (process.cwd() !== repoRoot) process.chdir(repoRoot);
 
-const { BrowserPool, FetchEngine, ProfileRegistry, effectiveProfile } = await import('@manta-fetcher/core');
+const { BrowserPool, FetchEngine, ProfileRegistry, effectiveProfile, profilesDir } = await import('@manta-fetcher/core');
 const { BENCH_CASES } = await import('../src/cases.mts');
 const { captureBaselineE2E, captureCase, BENCH_DIR, caseDir } = await import('../src/capture.mts');
 const { OFFLINE_ENGINES } = await import('../src/engines.mts');
@@ -48,7 +48,8 @@ if (!cases.length) {
   process.exit(1);
 }
 
-const registry = new ProfileRegistry();
+// dev 脚本：额外扫描仓库根模板 profiles/（bench case 的 profile 即模板）
+const registry = new ProfileRegistry([path.join(repoRoot, "profiles"), profilesDir]);
 await registry.reload();
 const pool = new BrowserPool(1);
 const engine = new FetchEngine(pool);

@@ -9,6 +9,7 @@ import {
   fmtPrf,
   goldMetrics,
   mdStructure,
+  mdToPlain,
   keyFactRecall,
   pct,
   sentenceRecall,
@@ -113,7 +114,8 @@ export function buildCaseReport(name: string, url: string, profileName: string |
       ms: meta.ms ?? {},
       profileAware: meta.profileAware ?? false,
       sentenceRecall: { ratio: 0, hits: 0, total: 0 },
-      bigram: bigramPrf(md, refText),
+      // bigram 用去语法纯文本：md 链接的 URL 是投影产物而非内容噪音，原始串会虚扣精度
+      bigram: bigramPrf(mdToPlain(md), refText),
       structure: { md: mdStructure(md), dom: domStats },
       charRatio: refChars ? plain / refChars : 0,
     };
@@ -162,7 +164,7 @@ export function buildCaseReport(name: string, url: string, profileName: string |
       if (a.engine >= b.engine) continue;
       const mdA = fs.readFileSync(path.join(engineDir, `${a.engine}.md`), 'utf8');
       const mdB = fs.readFileSync(path.join(engineDir, `${b.engine}.md`), 'utf8');
-      agreement[`${a.engine}~${b.engine}`] = Number(bigramPrf(mdA, mdB).f1.toFixed(4));
+      agreement[`${a.engine}~${b.engine}`] = Number(bigramPrf(mdToPlain(mdA), mdToPlain(mdB)).f1.toFixed(4));
     }
   }
 
@@ -186,7 +188,7 @@ export function buildCaseReport(name: string, url: string, profileName: string |
       error: meta.error,
       ms: meta.ms?.total ?? 0,
       sentenceRecall: sr,
-      bigramF1: refText ? bigramPrf(md, refText).f1 : 0,
+      bigramF1: refText ? bigramPrf(mdToPlain(md), refText).f1 : 0,
       charRatio: refChars ? mdStructure(md).plainChars / refChars : 0,
     });
   }

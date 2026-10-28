@@ -4,14 +4,15 @@ import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 if (process.cwd() !== repoRoot) process.chdir(repoRoot);
-const { BrowserPool, ProfileRegistry } = await import('@manta-fetcher/core');
+const { BrowserPool, ProfileRegistry, profilesDir } = await import('@manta-fetcher/core');
 const { BENCH_CASES } = await import('../src/cases.mts');
 const { captureCase, caseDir } = await import('../src/capture.mts');
 
 const name = process.argv[2];
 const c = BENCH_CASES.find((x) => x.name === name);
 if (!c) { console.error(`未找到 case: ${name}`); process.exit(1); }
-const registry = new ProfileRegistry();
+// dev 脚本：额外扫描仓库根模板 profiles/（与 bench-run 一致）
+const registry = new ProfileRegistry([path.join(repoRoot, "profiles"), profilesDir]);
 await registry.reload();
 const pool = new BrowserPool(1);
 const res = await captureCase(c, registry, pool);

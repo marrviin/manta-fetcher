@@ -2,9 +2,13 @@
  * 临时验证脚本：跑多站点真实采集案例，检查 IR 结构与 markdown 投影。
  * 用法: ./node_modules/.bin/tsx /tmp/case-verify.mts
  */
-import { BrowserPool, FetchEngine, ProfileRegistry, effectiveProfile, layoutToMarkdown } from '@manta-fetcher/core';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { BrowserPool, FetchEngine, ProfileRegistry, effectiveProfile, layoutToMarkdown, profilesDir } from '@manta-fetcher/core';
 
-const registry = new ProfileRegistry();
+// dev 脚本：额外扫描仓库根模板 profiles/（与 bench-run 一致）
+const repoTemplatesDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../profiles');
+const registry = new ProfileRegistry([repoTemplatesDir, profilesDir]);
 await registry.reload();
 const pool = new BrowserPool(1);
 const engine = new FetchEngine(pool);

@@ -103,6 +103,8 @@ export interface DomStats {
   links: number;
   tables: number;
   textChars: number;
+  /** mainContent 内、短边 ≥ coreImgMinSide(80) 的内容图数（有 profile 时记录；缺省视为无参考） */
+  coreImages?: number;
 }
 
 export interface GoldData {

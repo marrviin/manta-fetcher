@@ -11,9 +11,9 @@ description: 为 manta-fetcher 生成新站点 Profile 的 agent 工作流：能
 ## 前置
 
 ```bash
-cd /path/to/manta-fetcher          # 必须仓库根（profiles/ 按 cwd 解析）
+cd /path/to/manta-fetcher          # 仓库根工作（落盘根 = <仓库根>/.manta-fetcher）
 pnpm --filter @manta-fetcher/core build   # 改过 core 源码后必须；mcp 脚本 import 的是 dist
-./node_modules/.bin/tsx packages/mcp/scripts/mcp-smoke.mts   # 冒烟
+MANTA_FETCHER_PROFILES_DIR=$PWD/profiles ./node_modules/.bin/tsx packages/mcp/scripts/mcp-smoke.mts   # 冒烟（env 指向模板 profiles）
 ```
 
 ## 第 0 步：能力分层判断（能不写 profile 就不写）
@@ -57,7 +57,7 @@ EOF
 ## 第 2 步：起草 YAML（每个字段都有明确的"什么时候写"）
 
 ```yaml
-# profiles/<site>.yaml
+# 用户 profiles 目录（仓库根工作即 <仓库根>/.manta-fetcher/profiles/<site>.yaml；参考仓库根 profiles/ 下的示例模板）
 name: <site>                        # = MCP 工具名 fetch_<site>
 description: <一句话，会成为工具描述>
 match: ["https://<站点>/pattern*"]  # 尽量窄，避免误吞
@@ -127,13 +127,13 @@ structured:
 - 校准期间落的盘只留最终轮次产物；删文章产物时核对孤儿图片（`cache/images/<site>/`）
 - 测试产生的假 storageState 记得删
 
-**交付物**：`profiles/<site>.yaml` + profile-verify 的 PASS 输出（贴给用户，量化可信）。
+**交付物**：`<落盘根>/profiles/<site>.yaml` + profile-verify 的 PASS 输出（贴给用户，量化可信）。
 
 ## 常见问题速查
 
 | 现象 | 原因 → 处置 |
 |---|---|
-| profile 写了但 fetch 没命中 | URL 不匹配 match 模式 / YAML 语法错误（ProfileRegistry 会静默跳过坏文件）→ `ls profiles/` + 重新 reload |
+| profile 写了但 fetch 没命中 | URL 不匹配 match 模式 / YAML 语法错误（ProfileRegistry 会静默跳过坏文件）→ `ls <落盘根>/profiles/` + 重新 reload |
 | 改 YAML 不生效 | MCP 进程缓存了 profile → ListTools 热加载，但 YAML 语法错会保持旧版；重新 `pnpm build` + 重启 |
 | fetch 报"登录态已失效" | 被 loginRedirect 正则命中 → 调 login_<site> 后重试 |
 | 列表抓 0 条 | 未渲染完/反爬/选择器失效 → 提高 timeout 重试一次；仍 0 重新探 DOM |
