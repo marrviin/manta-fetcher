@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>无语义标签页</title>
+<style>
+  body { margin: 0; font-family: sans-serif; }
+  .wrap { width: 756px; margin: 0 auto; padding: 40px 0; }
+  .title { font-size: 28px; font-weight: 600; color: #1a1a1a; }
+  .sub { font-size: 20px; font-weight: 600; color: #1a1a1a; }
+  .body-text { font-size: 16px; font-weight: 400; color: #333333; }
+  .meta { font-size: 13px; color: #999999; }
+  .nav-foot { font-size: 13px; color: #aaaabb; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="title">这个页面没有任何语义标签：全部是 div 和 span</div>
+  <div class="meta">发布于 2026-10-17 · 阅读量 12,000 · 作者字段</div>
+  <div class="body-text">第一段正文。无语义页面的块识别完全依赖启发式：字号聚类找出正文参考，Paragraph 角色由 inferred 标记。这一段与后续段落使用完全相同的样式，构成正文聚类的主要文本量。</div>
+  <div class="body-text">第二段正文，同样式同颜色，继续为正文聚类贡献字符数。启发式应当把这些 div 归位为 para 角色并标记 body。</div>
+  <div class="sub">小节标题：字号大于正文参考，应被归位为 heading</div>
+  <div class="body-text">小节之后的正文段落，回到正文聚类的字号与颜色。聚类算法要求同 fontSize 加同 color 才会合入同一簇，这一段与开头两段一致。</div>
+  <div class="body-text">最后一段正文，用于确定核心内容区间的下界。启发式路径下主标题为正文起点之上字号最大的节点。</div>
+</div>
+<div class="nav-foot" style="text-align:center; padding: 24px 0;">页脚导航 · 关于我们 · 联系方式 · 备案号占位文本</div>
+</body>
+</html>

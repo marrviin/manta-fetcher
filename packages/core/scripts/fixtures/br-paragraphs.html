@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>BR 分段页：裸文本容器与语义 p 内的 br</title>
+<style>
+  body { margin: 0; font-family: sans-serif; }
+  .wrap { width: 756px; margin: 0 auto; padding: 40px 0; }
+  .title { font-size: 28px; font-weight: 600; color: #1a1a1a; }
+  .body-text { font-size: 16px; font-weight: 400; color: #333333; }
+  .article-bd { font-size: 16px; font-weight: 400; color: #333333; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="title">雪球式正文：单容器裸文本加 br 分段</div>
+  <div class="article-bd">第一段正文文本，与后续段落同属一个容器节点，中间没有 p 标签只靠 br 换行。<br>第二段正文文本，此前整块会被折叠成一行巨型段落，现在应按 br 切成独立段落节点。<br>第三段正文文本，段落各自持有文本盒坐标，供核心区间与 markdown 投影按真实段落使用。</div>
+  <p class="body-text">语义 p 内的 br 同样切分：站点在 p 里用 br 做软分段很常见，这里是第一行内容足够长，可以被正文聚类识别。<br>这是同一个 p 里的第二行，应当成为独立的段落节点而不是拼接到上一行末尾。</p>
+  <div class="title" style="font-size: 20px;">小节标题：不参与 br 切分对照</div>
+</div>
+</body>
+</html>

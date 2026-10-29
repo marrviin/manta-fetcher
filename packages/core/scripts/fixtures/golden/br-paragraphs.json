@@ -1,0 +1,172 @@
+{
+  "docHeight": 800,
+  "truncated": false,
+  "nodes": [
+    {
+      "rect": [
+        262,
+        40,
+        756,
+        40
+      ],
+      "role": "heading",
+      "runs": [
+        {
+          "t": "雪球式正文：单容器裸文本加 br 分段"
+        }
+      ],
+      "fontSize": 28,
+      "color": "#1a1a1a",
+      "fontWeight": 600,
+      "importance": 1,
+      "level": 5,
+      "meta": {
+        "inferred": true,
+        "lineH": 40
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        80,
+        574,
+        22
+      ],
+      "role": "para",
+      "runs": [
+        {
+          "t": "第一段正文文本，与后续段落同属一个容器节点，中间没有 p 标签只靠 br 换行。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.53,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 22
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        102,
+        618,
+        22
+      ],
+      "role": "para",
+      "runs": [
+        {
+          "t": "第二段正文文本，此前整块会被折叠成一行巨型段落，现在应按 br 切成独立段落节点。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.54,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 22
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        124,
+        663,
+        22
+      ],
+      "role": "para",
+      "runs": [
+        {
+          "t": "第三段正文文本，段落各自持有文本盒坐标，供核心区间与 markdown 投影按真实段落使用。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.55,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 22
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        162,
+        748,
+        44
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "语义 p 内的 br 同样切分：站点在 p 里用 br 做软分段很常见，这里是第一行内容足够长，可以被正文聚类识别。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.59,
+      "level": 3,
+      "meta": {
+        "lineH": 22
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        206,
+        564,
+        22
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "这是同一个 p 里的第二行，应当成为独立的段落节点而不是拼接到上一行末尾。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.52,
+      "level": 3,
+      "meta": {
+        "lineH": 22
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        244,
+        756,
+        28
+      ],
+      "role": "heading",
+      "runs": [
+        {
+          "t": "小节标题：不参与 br 切分对照"
+        }
+      ],
+      "fontSize": 20,
+      "color": "#1a1a1a",
+      "fontWeight": 600,
+      "importance": 0.7,
+      "level": 4,
+      "meta": {
+        "inferred": true,
+        "lineH": 28
+      },
+      "body": false
+    }
+  ]
+}

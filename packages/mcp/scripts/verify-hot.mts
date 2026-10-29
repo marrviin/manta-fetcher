@@ -1,0 +1,15 @@
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import path from 'node:path';
+const transport = new StdioClientTransport({ command: process.execPath, args: [path.resolve('packages/mcp/dist/index.js')], cwd: process.cwd() });
+const client = new Client({ name: 'verify', version: '0.0.0' });
+await client.connect(transport);
+const tools = await client.listTools();
+console.log('tools:', tools.tools.map((t) => t.name).join(', '));
+const res = await client.callTool({ name: 'fetch_juejin_hot_top3', arguments: { url: 'https://juejin.cn/hot/articles' } });
+console.log('isError:', res.isError);
+const text = (res.content as { type: string; text?: string }[]).find((c) => c.type === 'text')?.text ?? '';
+console.log(text.slice(0, 700));
+console.log('...(总长', text.length, '字符)');
+await client.close();
+process.exit(0);

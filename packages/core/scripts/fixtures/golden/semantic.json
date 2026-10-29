@@ -1,0 +1,545 @@
+{
+  "docHeight": 1158,
+  "truncated": false,
+  "nodes": [
+    {
+      "rect": [
+        262,
+        61,
+        756,
+        90
+      ],
+      "role": "h1",
+      "runs": [
+        {
+          "t": "语义标签完整页：覆盖 h1-h6/p/pre/table/li/blockquote/img"
+        }
+      ],
+      "fontSize": 32,
+      "color": "#252933",
+      "fontWeight": 600,
+      "importance": 1,
+      "level": 5,
+      "meta": {
+        "lineH": 45
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        173,
+        756,
+        29
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "这是引言段落，包含"
+        },
+        {
+          "t": "一个普通链接",
+          "href": "https://example.com/link"
+        },
+        {
+          "t": "、"
+        },
+        {
+          "t": "加粗片段",
+          "bold": true
+        },
+        {
+          "t": "、"
+        },
+        {
+          "t": "斜体",
+          "italic": true
+        },
+        {
+          "t": "和"
+        },
+        {
+          "t": "行内代码",
+          "code": true
+        },
+        {
+          "t": "。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.52,
+      "level": 3,
+      "meta": {
+        "lineH": 28
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        220,
+        756,
+        30
+      ],
+      "role": "h2",
+      "runs": [
+        {
+          "t": "第一节：列表与引用"
+        }
+      ],
+      "fontSize": 22,
+      "color": "#252933",
+      "fontWeight": 600,
+      "importance": 0.8,
+      "level": 4,
+      "meta": {
+        "lineH": 30
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        302,
+        268,
+        716,
+        28
+      ],
+      "role": "li",
+      "runs": [
+        {
+          "t": "无序列表层级一"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.46,
+      "level": 3,
+      "meta": {
+        "ordered": false,
+        "depth": 1,
+        "lineH": 28
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        302,
+        299,
+        80,
+        22
+      ],
+      "role": "li",
+      "runs": [
+        {
+          "t": "无序第二项"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.4,
+      "level": 3,
+      "meta": {
+        "ordered": false,
+        "depth": 1
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        342,
+        324,
+        676,
+        28
+      ],
+      "role": "li",
+      "runs": [
+        {
+          "t": "嵌套有序层级二"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.45,
+      "level": 3,
+      "meta": {
+        "ordered": true,
+        "depth": 2,
+        "lineH": 28
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        342,
+        352,
+        676,
+        28
+      ],
+      "role": "li",
+      "runs": [
+        {
+          "t": "嵌套有序第二项"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.45,
+      "level": 3,
+      "meta": {
+        "ordered": true,
+        "depth": 2,
+        "lineH": 28
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        302,
+        380,
+        716,
+        28
+      ],
+      "role": "li",
+      "runs": [
+        {
+          "t": "无序第三项"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.45,
+      "level": 3,
+      "meta": {
+        "ordered": false,
+        "depth": 1,
+        "lineH": 28
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        424,
+        716,
+        28
+      ],
+      "role": "blockquote",
+      "runs": [
+        {
+          "t": "这是一段引用块，字号与正文相同但颜色更浅，用于验证 blockquote 角色。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#666666",
+      "fontWeight": 400,
+      "importance": 0.39,
+      "level": 3,
+      "meta": {
+        "lineH": 28
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        471,
+        756,
+        30
+      ],
+      "role": "h2",
+      "runs": [
+        {
+          "t": "第二节：代码块与表格"
+        }
+      ],
+      "fontSize": 22,
+      "color": "#252933",
+      "fontWeight": 600,
+      "importance": 0.8,
+      "level": 4,
+      "meta": {
+        "lineH": 30
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        519,
+        756,
+        72
+      ],
+      "role": "pre",
+      "runs": [
+        {
+          "t": "function greet(name) {\n  return `hello, ${name}`;\n}"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#000000",
+      "fontWeight": 400,
+      "importance": 0.55,
+      "level": 3,
+      "meta": {
+        "lang": "js",
+        "lineH": 16
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        263,
+        605,
+        73,
+        29
+      ],
+      "role": "th",
+      "runs": [
+        {
+          "t": "指标"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#000000",
+      "fontWeight": 700,
+      "importance": 0.42,
+      "level": 3,
+      "meta": {
+        "row": 0,
+        "col": 0,
+        "lineH": 29
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        336,
+        605,
+        70,
+        29
+      ],
+      "role": "th",
+      "runs": [
+        {
+          "t": "优化前"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#000000",
+      "fontWeight": 700,
+      "importance": 0.43,
+      "level": 3,
+      "meta": {
+        "row": 0,
+        "col": 1,
+        "lineH": 29
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        405,
+        605,
+        67,
+        29
+      ],
+      "role": "th",
+      "runs": [
+        {
+          "t": "优化后"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#000000",
+      "fontWeight": 700,
+      "importance": 0.45,
+      "level": 3,
+      "meta": {
+        "row": 0,
+        "col": 2,
+        "lineH": 29
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        263,
+        634,
+        73,
+        29
+      ],
+      "role": "td",
+      "runs": [
+        {
+          "t": "首屏时间"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#000000",
+      "fontWeight": 400,
+      "importance": 0.36,
+      "level": 2,
+      "meta": {
+        "row": 1,
+        "col": 0,
+        "lineH": 29
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        336,
+        634,
+        70,
+        29
+      ],
+      "role": "td",
+      "runs": [
+        {
+          "t": "3200ms"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#000000",
+      "fontWeight": 400,
+      "importance": 0.38,
+      "level": 3,
+      "meta": {
+        "row": 1,
+        "col": 1,
+        "lineH": 29
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        405,
+        634,
+        67,
+        29
+      ],
+      "role": "td",
+      "runs": [
+        {
+          "t": "1200ms"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#000000",
+      "fontWeight": 400,
+      "importance": 0.39,
+      "level": 3,
+      "meta": {
+        "row": 1,
+        "col": 2,
+        "lineH": 29
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        263,
+        663,
+        73,
+        29
+      ],
+      "role": "td",
+      "runs": [
+        {
+          "t": "包体积"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#000000",
+      "fontWeight": 400,
+      "importance": 0.36,
+      "level": 2,
+      "meta": {
+        "row": 2,
+        "col": 0,
+        "lineH": 29
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        336,
+        663,
+        70,
+        29
+      ],
+      "role": "td",
+      "runs": [
+        {
+          "t": "2.4MB"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#000000",
+      "fontWeight": 400,
+      "importance": 0.38,
+      "level": 3,
+      "meta": {
+        "row": 2,
+        "col": 1,
+        "lineH": 29
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        405,
+        663,
+        67,
+        29
+      ],
+      "role": "td",
+      "runs": [
+        {
+          "t": "980KB"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#000000",
+      "fontWeight": 400,
+      "importance": 0.39,
+      "level": 3,
+      "meta": {
+        "row": 2,
+        "col": 2,
+        "lineH": 29
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        262,
+        709,
+        756,
+        28
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "结尾段落：验证正文聚类的收尾边界。这一段在表格之后，应参与核心内容区间的下界。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.54,
+      "level": 3,
+      "meta": {
+        "lineH": 28
+      },
+      "body": true
+    }
+  ]
+}

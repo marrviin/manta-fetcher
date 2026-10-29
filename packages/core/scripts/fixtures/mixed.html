@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>混排与浮层页</title>
+<style>
+  body { margin: 0; font-family: sans-serif; }
+  .wrap { width: 756px; margin: 0 auto; padding: 40px 0; }
+  h1 { font-size: 30px; font-weight: 700; }
+  p, li { font-size: 16px; color: #252933; line-height: 1.8; }
+  .deco { position: absolute; top: 12px; left: 8px; color: #ff8800; font-size: 12px; }
+  .overlay {
+    position: fixed; top: 40%; left: 30%; width: 360px; height: 120px;
+    background: #fff; border: 1px solid #ddd; z-index: 100; padding: 16px;
+  }
+  .overlay p { font-size: 14px; position: relative; z-index: 100; }
+</style>
+</head>
+<body>
+<div class="deco">站外跳转 · 广告位</div>
+<div class="wrap">
+  <h1>混排页：图内嵌段落与浮层</h1>
+  <p>下图之前的第一段正文，段落后面紧跟一张内嵌在同一个 p 元素里的图片<img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22300%22%3E%3Crect%20width%3D%22640%22%20height%3D%22300%22%20fill%3D%22%23ffe9d6%22%2F%3E%3C%2Fsvg%3E" alt="段落内插图" width="640" height="300">图片之后的文字仍然属于同一个段落，验证纯文本盒把图片区域排除后 rect 是否只罩住文本。</p>
+  <ul>
+    <li>外层列表项（自身有文本，rect 不应罩住嵌套列表）
+      <ul>
+        <li>嵌套列表项 A</li>
+        <li>嵌套列表项 B</li>
+      </ul>
+    </li>
+  </ul>
+  <p>收尾段落，正文聚类的最后一个成员。</p>
+</div>
+<div class="overlay">
+  <p>浮层弹窗：zIndex 100，应抬底到 0.55 以上并带 zIndex 字段输出。</p>
+</div>
+</body>
+</html>

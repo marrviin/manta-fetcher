@@ -1,0 +1,5 @@
+#!/bin/zsh
+# trafilatura 基线引擎 wrapper：固定使用 packages/bench/.venv 的解释器，
+# 供 bench（engines.mts spawnSync）与人工调试统一入口。
+DIR="$(cd "$(dirname "$0")" && pwd)"
+exec "$DIR/../.venv/bin/python" "$DIR/trafilatura-engine.py" "$@"

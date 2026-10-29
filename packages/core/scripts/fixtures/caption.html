@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>自绘图注页</title>
+<style>
+  body { margin: 0; font-family: sans-serif; }
+  main { width: 640px; margin: 0 auto; }
+  h1 { font-size: 24px; }
+  p { font-size: 16px; color: #333; line-height: 1.8; margin: 16px 0; }
+  .shot { width: 480px; height: 270px; display: block; margin: 0 auto; }
+  /* 站点自绘图注：小字号灰字紧贴图片下缘（间距 4px），非 figcaption */
+  .cap { font-size: 13px; color: #888; text-align: center; margin-top: 4px; }
+  /* 负例：小图标下方的标签文字，图标短边 < 80px 不算图注载体 */
+  .icon-row { display: flex; align-items: center; gap: 6px; margin-top: 24px; }
+  .icon-row img { width: 16px; height: 16px; }
+  .icon-row span { font-size: 12px; color: #999; }
+</style>
+</head>
+<body>
+<main>
+  <h1>自绘图注回归：紧贴图片的孤立短文本应按图注保留</h1>
+  <p>第一段正文，交代图片位置。自绘图注是小字号灰字、紧贴图片下缘的孤立文本，不参与正文聚类，按启发式会归为 other 而丢失。</p>
+  <img class="shot" src="https://fixture.invalid/shot-1.png" alt="产品截图">
+  <div class="cap">产品截图：场景选择页的卡片视图</div>
+  <p>第二段正文，与图片之间保持常规段落间距（大于图注判定阈值），不应被误判为图注。</p>
+  <img class="shot" src="https://fixture.invalid/shot-2.png" alt="对话界面">
+  <div class="cap">对话界面：原谅值 11% 的成功案例</div>
+  <div class="icon-row"><img src="https://fixture.invalid/icon-1.png" alt=""><span>小图标标签不是图注</span></div>
+  <p>第三段正文收尾，锚定核心内容区间的底部边界。</p>
+</main>
+</body>
+</html>

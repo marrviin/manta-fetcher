@@ -1,0 +1,31 @@
+{
+  "name": "@manta-fetcher/mcp",
+  "version": "0.2.0",
+  "description": "manta-fetcher MCP server 与 CLI",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marrviin/manta-fetcher.git",
+    "directory": "packages/mcp"
+  },
+  "type": "module",
+  "bin": {
+    "manta-fetcher": "dist/index.js"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.8.1",
+    "@manta-fetcher/core": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.20.0",
+    "playwright": "^1.64.0"
+  }
+}

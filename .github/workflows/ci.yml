@@ -1,0 +1,41 @@
+# CI：push 到 main/develop 与所有 PR 时跑构建 + 发布包校验（pack 干跑）。
+# 网络采集类冒烟（mcp-smoke / core-smoke 需 Chromium 与外网）不在 CI 跑，见 README 本地验证。
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 从根 package.json 的 packageManager 字段读取 pnpm 版本
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 构建发布包（core / mcp）
+        run: pnpm --filter @manta-fetcher/core --filter @manta-fetcher/mcp build
+
+      - name: CLI 冒烟（version / help / tools）
+        run: |
+          node packages/mcp/dist/index.js --version
+          node packages/mcp/dist/index.js help > /dev/null
+          node packages/mcp/dist/index.js tools > /dev/null
+
+      # pack 干跑：校验 files 字段与 workspace:* 版本替换，发布前提前暴露打包问题
+      - name: 发布包校验（pack 干跑）
+        run: |
+          pnpm --filter @manta-fetcher/core pack --pack-destination /tmp/pack-check
+          pnpm --filter @manta-fetcher/mcp pack --pack-destination /tmp/pack-check

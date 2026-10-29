@@ -1,0 +1,490 @@
+{
+  "docHeight": 800,
+  "truncated": false,
+  "nodes": [
+    {
+      "rect": [
+        0,
+        10,
+        28,
+        20
+      ],
+      "role": "other",
+      "runs": [
+        {
+          "t": "首页",
+          "href": "https://example.com/"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#061b40",
+      "fontWeight": 400,
+      "importance": 0.24,
+      "level": 2,
+      "meta": {
+        "inferred": true,
+        "lineH": 20
+      }
+    },
+    {
+      "rect": [
+        45,
+        10,
+        28,
+        20
+      ],
+      "role": "other",
+      "runs": [
+        {
+          "t": "热榜",
+          "href": "https://example.com/hot"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#061b40",
+      "fontWeight": 400,
+      "importance": 0.25,
+      "level": 2,
+      "meta": {
+        "inferred": true,
+        "lineH": 20
+      }
+    },
+    {
+      "rect": [
+        91,
+        10,
+        28,
+        20
+      ],
+      "role": "other",
+      "runs": [
+        {
+          "t": "专题",
+          "href": "https://example.com/topics"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#061b40",
+      "fontWeight": 400,
+      "importance": 0.26,
+      "level": 2,
+      "meta": {
+        "inferred": true,
+        "lineH": 20
+      }
+    },
+    {
+      "rect": [
+        814,
+        50,
+        276,
+        22
+      ],
+      "role": "h2",
+      "runs": [
+        {
+          "t": "今日热榜"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#000000",
+      "fontWeight": 700,
+      "importance": 0.66,
+      "level": 4,
+      "meta": {
+        "lineH": 22
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        190,
+        62,
+        600,
+        25
+      ],
+      "role": "h3",
+      "runs": [
+        {
+          "t": "第一条：智能体框架迎来月度大版本更新",
+          "href": "https://example.com/a/1"
+        }
+      ],
+      "fontSize": 18,
+      "color": "#000000",
+      "fontWeight": 600,
+      "importance": 0.73,
+      "level": 4,
+      "meta": {
+        "lineH": 25
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        814,
+        90,
+        16,
+        40
+      ],
+      "role": "heading",
+      "runs": [
+        {
+          "t": "#1",
+          "href": "https://example.com/h/11"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#ff9f1a",
+      "fontWeight": 600,
+      "importance": 0.61,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 40
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        838,
+        90,
+        252,
+        40
+      ],
+      "role": "li",
+      "runs": [
+        {
+          "t": "微软升级写作助手：支持任务委派与交互式报告生成",
+          "href": "https://example.com/h/11"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#061b40",
+      "fontWeight": 400,
+      "importance": 0.4,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 20
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        190,
+        93,
+        600,
+        40
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "摘要文本：本月发布的智能体框架重点升级了任务编排与工具调用链路，长任务成功率明显提升。"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#666666",
+      "fontWeight": 400,
+      "importance": 0.53,
+      "level": 3,
+      "meta": {
+        "lineH": 20
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        814,
+        151,
+        19,
+        40
+      ],
+      "role": "heading",
+      "runs": [
+        {
+          "t": "#2",
+          "href": "https://example.com/h/12"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#ff9f1a",
+      "fontWeight": 600,
+      "importance": 0.61,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 40
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        841,
+        151,
+        249,
+        40
+      ],
+      "role": "li",
+      "runs": [
+        {
+          "t": "腾讯上线创作者接单平台：支持需求发布与智能匹配结算",
+          "href": "https://example.com/h/12"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#061b40",
+      "fontWeight": 400,
+      "importance": 0.4,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 20
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        190,
+        158,
+        600,
+        25
+      ],
+      "role": "h3",
+      "runs": [
+        {
+          "t": "第二条：开源多模态模型支持百万上下文窗口",
+          "href": "https://example.com/a/2"
+        }
+      ],
+      "fontSize": 18,
+      "color": "#000000",
+      "fontWeight": 600,
+      "importance": 0.73,
+      "level": 4,
+      "meta": {
+        "lineH": 25
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        190,
+        189,
+        600,
+        20
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "摘要文本：该模型在保留基础音频理解能力的同时引入空间感知，适用于座舱与家居场景。"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#666666",
+      "fontWeight": 400,
+      "importance": 0.52,
+      "level": 3,
+      "meta": {
+        "lineH": 20
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        814,
+        212,
+        19,
+        40
+      ],
+      "role": "heading",
+      "runs": [
+        {
+          "t": "#3",
+          "href": "https://example.com/h/13"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#ff9f1a",
+      "fontWeight": 600,
+      "importance": 0.61,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 40
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        841,
+        212,
+        249,
+        40
+      ],
+      "role": "li",
+      "runs": [
+        {
+          "t": "数学家凭量化交易跻身富豪榜第八，身家超过千亿规模",
+          "href": "https://example.com/h/13"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#061b40",
+      "fontWeight": 400,
+      "importance": 0.4,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 20
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        190,
+        234,
+        600,
+        25
+      ],
+      "role": "h3",
+      "runs": [
+        {
+          "t": "第三条：端侧推理引擎新版本压缩内存占用一半",
+          "href": "https://example.com/a/3"
+        }
+      ],
+      "fontSize": 18,
+      "color": "#000000",
+      "fontWeight": 600,
+      "importance": 0.73,
+      "level": 4,
+      "meta": {
+        "lineH": 25
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        190,
+        265,
+        600,
+        20
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "摘要文本：新引擎通过量化与算子融合把 3GB 内存的端侧模型压缩到一半，速度保持稳定。"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#666666",
+      "fontWeight": 400,
+      "importance": 0.53,
+      "level": 3,
+      "meta": {
+        "lineH": 20
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        814,
+        273,
+        19,
+        40
+      ],
+      "role": "heading",
+      "runs": [
+        {
+          "t": "#4",
+          "href": "https://example.com/h/14"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#ff9f1a",
+      "fontWeight": 600,
+      "importance": 0.61,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 40
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        841,
+        273,
+        249,
+        40
+      ],
+      "role": "li",
+      "runs": [
+        {
+          "t": "大模型默认上下文窗口扩容至五十万，长文本调用免费",
+          "href": "https://example.com/h/14"
+        }
+      ],
+      "fontSize": 14,
+      "color": "#061b40",
+      "fontWeight": 400,
+      "importance": 0.4,
+      "level": 3,
+      "meta": {
+        "inferred": true,
+        "lineH": 20
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        0,
+        352,
+        40,
+        17
+      ],
+      "role": "other",
+      "runs": [
+        {
+          "t": "English",
+          "href": "https://example.com/en"
+        }
+      ],
+      "fontSize": 12,
+      "color": "#999999",
+      "fontWeight": 400,
+      "importance": 0.12,
+      "level": 1,
+      "meta": {
+        "inferred": true,
+        "lineH": 17
+      }
+    },
+    {
+      "rect": [
+        57,
+        352,
+        48,
+        17
+      ],
+      "role": "other",
+      "runs": [
+        {
+          "t": "简体中文",
+          "href": "https://example.com/zh"
+        }
+      ],
+      "fontSize": 12,
+      "color": "#999999",
+      "fontWeight": 400,
+      "importance": 0.12,
+      "level": 1,
+      "meta": {
+        "inferred": true,
+        "lineH": 17
+      }
+    }
+  ]
+}

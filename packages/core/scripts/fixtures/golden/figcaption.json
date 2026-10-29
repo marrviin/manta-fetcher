@@ -1,0 +1,144 @@
+{
+  "docHeight": 877,
+  "truncated": false,
+  "nodes": [
+    {
+      "rect": [
+        320,
+        16,
+        640,
+        33
+      ],
+      "role": "h1",
+      "runs": [
+        {
+          "t": "图注语义标签回归：figcaption 不应被当噪音丢弃"
+        }
+      ],
+      "fontSize": 24,
+      "color": "#000000",
+      "fontWeight": 700,
+      "importance": 0.95,
+      "level": 5,
+      "meta": {
+        "lineH": 33
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        320,
+        65,
+        640,
+        58
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "第一段正文，说明图注使用 figure 与 figcaption 语义标签的场景。图注字号小且为灰色，不参与正文聚类，若按启发式段落归位会被整段丢弃。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.6,
+      "level": 3,
+      "meta": {
+        "lineH": 29
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        320,
+        409,
+        640,
+        24
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "界面截图：首页各场景卡片视图"
+        }
+      ],
+      "fontSize": 13,
+      "color": "#888888",
+      "fontWeight": 400,
+      "importance": 0.28,
+      "level": 2,
+      "meta": {
+        "lineH": 24
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        320,
+        449,
+        640,
+        58
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "第二段正文，位于图片之后，用于锚定核心内容区间的底部边界，保证图注落在核心区间内。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.55,
+      "level": 3,
+      "meta": {
+        "lineH": 29
+      },
+      "body": true
+    },
+    {
+      "rect": [
+        320,
+        792,
+        640,
+        24
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "对话界面：原谅值 11% 的成功哄人案例"
+        }
+      ],
+      "fontSize": 13,
+      "color": "#888888",
+      "fontWeight": 400,
+      "importance": 0.27,
+      "level": 2,
+      "meta": {
+        "lineH": 24
+      },
+      "body": false
+    },
+    {
+      "rect": [
+        320,
+        832,
+        640,
+        29
+      ],
+      "role": "p",
+      "runs": [
+        {
+          "t": "第三段正文收尾，验证多个图注均按语义角色 p 输出且标记 body。"
+        }
+      ],
+      "fontSize": 16,
+      "color": "#333333",
+      "fontWeight": 400,
+      "importance": 0.48,
+      "level": 3,
+      "meta": {
+        "lineH": 29
+      },
+      "body": false
+    }
+  ]
+}
