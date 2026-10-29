@@ -1,7 +1,13 @@
 {
   "name": "@manta-fetcher/core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "采集引擎：无头浏览器、Site Profile、DOM→Markdown、图片处理",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marrviin/manta-fetcher.git",
+    "directory": "packages/core"
+  },
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

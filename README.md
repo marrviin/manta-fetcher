@@ -14,7 +14,7 @@
 ```
 packages/
   core/   # 采集引擎，不依赖 MCP：BrowserPool / FetchEngine / Profile / DOM→Markdown / 图片
-  mcp/    # MCP server（stdio）+ CLI（manta-fetcher serve|login|test）
+  mcp/    # MCP server（stdio）+ CLI（manta-fetcher serve|init|tools|doctor|login|test|preview）
 profiles/ # 站点 Profile 示例模板（yaml 为主，可挂 JS Adapter）——不自动加载，复制到用户 profiles 目录生效
 packages/skills/manta-fetcher/ # 使用技能：接入 MCP → 布置任务 → 验证还原度 → 沉淀新场景
 auth/     # 各站点登录态（storageState）
@@ -206,9 +206,28 @@ Profile 声明 `auth.required` 后，MCP 会同时注册 `fetch_<site>` 和 `log
 node packages/mcp/dist/index.js test <URL> [站点名]   # 抓一次输出 Markdown 预览（调 Profile 用）
 node packages/mcp/dist/index.js login <站点名> <URL>  # 有头浏览器手动登录，回车保存登录态
 node packages/mcp/dist/index.js serve                 # 启动 MCP server（默认）
+node packages/mcp/dist/index.js init [-i]             # 把 MCP 配置与 Skill 写入本机 AI 客户端（--no-mcp/--no-skill 可只做一半）
+node packages/mcp/dist/index.js tools                 # 列出 MCP 会注册的全部工具（与 serve 一致，不启动 server）
+node packages/mcp/dist/index.js doctor                # 体检本机环境（Node/Chromium/各客户端 MCP 配置/Skill 同步/profiles/登录态）
+node packages/mcp/dist/index.js -v                    # 版本号
 pnpm --filter @manta-fetcher/core exec tsx scripts/core-smoke.mts   # 引擎冒烟：嵌套字段 + 登录等待
 pnpm --filter @manta-fetcher/mcp exec tsx scripts/mcp-smoke.mts     # MCP 协议冒烟
 ```
+
+### CI 与发布 npm
+
+GitHub Actions（`.github/workflows/`）：
+
+- **CI**（push main/develop + PR）：frozen-lockfile 安装 → 构建 core/mcp → CLI 冒烟（version/help/tools）→ pack 干跑校验发布产物（files 字段与 `workspace:*` 版本替换）
+- **Publish**（推送 `v*` tag）：对齐两包版本号到 tag → 构建 → `pnpm publish --provenance` 发布 `@manta-fetcher/core` 与 `@manta-fetcher/mcp`；版本已在 npm 上则跳过（幂等，可安全重跑）
+
+发版流程（两发布包共用一个版本号，以 tag 为准）：
+
+```bash
+git tag v0.3.0 && git push origin v0.3.0   # 触发 publish workflow
+```
+
+前置：仓库 Secrets 配置 `NPM_TOKEN`（npmjs.com → Access Tokens → Automation），provenance 需要的 `id-token` 权限与包内 `repository` 字段已配置。
 
 ### 抽取效果对比基准（bench）
 

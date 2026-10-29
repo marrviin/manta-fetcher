@@ -12,29 +12,43 @@ import {
   registerPreview,
 } from '@manta-fetcher/core';
 import type { PageLayout, PreviewMeta } from '@manta-fetcher/core';
+import { runDoctor } from './cli/doctor.js';
+import { runTools } from './cli/tools.js';
 import { runInit } from './cli/init.js';
 
 const USAGE = `manta-fetcher — 场景化网页采集 MCP
 
-用法:
-  manta-fetcher serve              启动 MCP server（stdio，默认）
-  manta-fetcher init [--no-mcp] [--no-skill]
-                                   把 MCP server 写进本机已安装 AI 客户端的配置
-                                   （Claude Code / Cursor / Gemini CLI / Codex / JoyCode），
-                                   并把 packages/skills 下的采集 Skill 装到客户端 skill 目录
-  manta-fetcher login <站点名> <起始URL>
-                                   打开有头浏览器手动登录，回车后保存登录态到 auth/<站点名>.storage.json
-  manta-fetcher test <URL> [站点名] [--save] [--preview]
-                                   抓取一次并把内容 IR 输出到 stdout（调 Profile 时用，不用启动 MCP）；
-                                   --save 落盘到采集目录（git 项目内 <项目根>/.manta-fetcher/cache/articles，
-                                   否则 <cwd>/.manta-fetcher/cache/articles）；
-                                   --preview 额外启动本地预览 server 渲染布局并自动打开浏览器
-  manta-fetcher preview [<URL | layout.json 路径>] [--dir <目录>]
-                                   启动本地预览 server 渲染布局并自动打开浏览器；
-                                   不带参数：批量加载落盘目录（默认同 --save，git 项目内
-                                   <项目根>/.manta-fetcher/cache/articles，否则 <cwd>/.manta-fetcher/cache/articles）
-                                   下所有布局 JSON，左侧列表可切换，最新的一份默认展示；
-                                   传 layout.json 路径则离线加载不重新抓取；传 URL 会先抓取
+用法: manta-fetcher <命令> [参数]
+
+采集:
+  test <URL> [站点名] [--save] [--preview]
+                          抓取一次并把内容 IR 输出到 stdout（调 Profile 用，不启动 MCP）；
+                          --save 落盘到采集目录（git 项目内 <项目根>/.manta-fetcher/cache/articles，
+                          否则 <cwd>/.manta-fetcher/cache/articles）；--preview 额外启动
+                          本地预览 server 渲染布局并自动打开浏览器
+  login <站点名> <起始URL>  打开有头浏览器手动登录，回车后保存登录态到 auth/<站点名>.storage.json
+  preview [<URL | layout.json 路径>] [--dir <目录>]
+                          启动本地预览 server 渲染布局并自动打开浏览器；不带参数批量加载
+                          落盘目录（默认同 --save）下所有布局 JSON，左侧列表可切换；传
+                          layout.json 路径则离线加载不重新抓取；传 URL 会先抓取
+
+接入:
+  init, -i [--no-mcp] [--no-skill]
+                          把 MCP server 写进本机已安装 AI 客户端的配置（Claude Code /
+                          Cursor / Gemini CLI / Codex / JoyCode），并把 packages/skills
+                          下的采集 Skill 装到客户端 skill 目录
+  tools                   列出 MCP server 会注册的全部工具（含各站点 profile 的采集工具
+                          与登录工具，与 serve 注册的一致，不启动 server）
+  doctor                  体检本机使用环境（Node / Chromium / 各 AI 客户端 MCP 配置 /
+                          Skill 同步 / profiles / 登录态 / 落盘目录），只读报告；
+                          有 error 级问题时退出码为 1
+
+服务:
+  serve                   启动 MCP server（stdio，默认，由 MCP client 拉起）
+
+全局:
+  -v, --version           显示版本号
+  -h, --help              显示本帮助
 
 MCP 客户端配置示例 (.mcp.json):
   { "mcpServers": { "manta-fetcher": { "command": "node", "args": ["<本项目路径>/dist/index.js"] } } }
@@ -54,6 +68,10 @@ export async function runCli(cmd: string | undefined, args: string[]): Promise<v
       return cmdLogin(args);
     case 'init':
       return runInit(args);
+    case 'tools':
+      return runTools();
+    case 'doctor':
+      return runDoctor();
     case 'test':
       return cmdTest(args);
     case 'preview':

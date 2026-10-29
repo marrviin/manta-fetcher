@@ -2,6 +2,8 @@ import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, wri
 import { homedir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import * as p from '@clack/prompts';
+import { displayWidth, padLabel } from './format.js';
 
 const SERVER_NAME = 'manta-fetcher';
 
@@ -192,6 +194,86 @@ function buildAgents(home: string, cmd: McpEntry): AgentSpec[] {
   ];
 }
 
+// ---------- doctor 只读体检（不改任何配置） ----------
+
+export type McpConfigStatus = 'missing' | 'exists' | 'outdated';
+
+export interface AgentMcpStatus {
+  name: string;
+  configPath: string;
+  detected: boolean;
+  status: McpConfigStatus;
+}
+
+/** 读 JSON 配置里 manta-fetcher 条目的状态（与 updateJsonMcp 的判断同源） */
+function jsonMcpStatus(configPath: string, server: McpEntry): McpConfigStatus {
+  if (!existsSync(configPath)) return 'missing';
+  let json: Record<string, unknown>;
+  try {
+    json = JSON.parse(readFileSync(configPath, 'utf8')) as Record<string, unknown>;
+  } catch {
+    return 'outdated';
+  }
+  const entry = (json.mcpServers as Record<string, unknown> | undefined)?.[SERVER_NAME];
+  return entry ? (entryMatches(entry, server) ? 'exists' : 'outdated') : 'missing';
+}
+
+/** 各 agent 配置里 manta-fetcher 条目的状态，供 doctor 展示（与 buildAgents 的安装位置一一对应） */
+export function agentMcpStatuses(home: string, cmd: McpEntry): AgentMcpStatus[] {
+  return buildAgents(home, cmd).map((agent) => ({
+    name: agent.name,
+    configPath: agent.configPath,
+    detected: agent.detect(),
+    // Codex 是 TOML，其余是 JSON —— 与 buildAgents 里的 install 写法一一对应
+    status: agent.configPath.endsWith('.toml')
+      ? !existsSync(agent.configPath)
+        ? 'missing'
+        : tomlEntryMatches(readFileSync(agent.configPath, 'utf8'), cmd)
+          ? 'exists'
+          : 'outdated'
+      : jsonMcpStatus(agent.configPath, cmd),
+  }));
+}
+
+export type SkillSyncStatus = 'latest' | 'outdated' | 'missing';
+
+export interface SkillSyncStatusItem {
+  skill: string;
+  agent: string;
+  dest: string;
+  status: SkillSyncStatus;
+}
+
+/** 随包 skill 名单（有 SKILL.md 的目录名） */
+export function listBundledSkills(root: string = findSkillsRoot() ?? ''): string[] {
+  if (!root || !existsSync(root)) return [];
+  return readdirSync(root).filter((name) => existsSync(path.join(root, name, 'SKILL.md')));
+}
+
+/** 各客户端 skill 目录里随包 skill 的同步状态，供 doctor 展示（不在仓库内 / 无客户端时为空） */
+export function skillSyncStatuses(home: string): SkillSyncStatusItem[] {
+  const skillsRoot = findSkillsRoot();
+  if (!skillsRoot) return [];
+  const skills = listBundledSkills(skillsRoot);
+  const items: SkillSyncStatusItem[] = [];
+  for (const target of buildSkillTargets(home).filter((t) => t.detect())) {
+    for (const skill of skills) {
+      const dest = path.join(target.dir, skill);
+      items.push({
+        skill,
+        agent: target.name,
+        dest,
+        status: !existsSync(dest)
+          ? 'missing'
+          : dirsEqual(path.join(skillsRoot, skill), dest)
+            ? 'latest'
+            : 'outdated',
+      });
+    }
+  }
+  return items;
+}
+
 // ---------- Skill 安装 ----------
 
 /** 本仓库的 skill 源目录 packages/skills（从模块位置向上找，兼容 dist / tsx 源码两种运行方式） */
@@ -271,91 +353,168 @@ function statIsDir(p: string): boolean {
  * manta-fetcher init：把 MCP server 写进已安装 AI 客户端的配置，并把本仓库
  * packages/skills 下的采集 Skill 复制到客户端的 skill 目录（用户级）。
  * 支持 --no-mcp / --no-skill 跳过其中一部分。
+ * 输出（同 joybuddy）：intro → spinner 检测 → spinner 写入（过程不逐条刷屏）
+ * → 聚合结果面板（每个 agent 一行：MCP + Skill 状态合并，失败项缩进附原因）→ outro 汇总。
  */
+
+/** init 结果面板里一个 agent 的聚合行 */
+interface AgentOutcome {
+  name: string;
+  detected: boolean;
+  /** null = --no-mcp 跳过 */
+  mcp: 'added' | 'updated' | 'exists' | 'error' | null;
+  /** 写入的配置文件路径（added/updated 时展示） */
+  mcpPath?: string;
+  /** null = --no-skill 跳过或该客户端不支持 skill */
+  skills: { installed: number; latest: number; failed: string[] } | null;
+  /** 失败原因 / 手动指引，缩进附在所属行下 */
+  hints: string[];
+}
+
 export async function runInit(args: string[]): Promise<void> {
   const noMcp = args.includes('--no-mcp');
   const noSkill = args.includes('--no-skill');
   const home = homedir();
   const rel = (p: string) => p.replace(home, '~');
 
-  console.error('[manta-fetcher] init：安装 MCP 与 Skill 到本机 AI 客户端\n');
+  p.intro('manta-fetcher init — 安装 MCP 配置与 Skill 到本机 AI 客户端');
+
+  const agents = buildAgents(home, mcpCommand());
+  const skillTargets = buildSkillTargets(home);
+
+  // 1. 检测：spinner 汇总一行，不逐个刷屏
+  const spinner = p.spinner();
+  spinner.start('正在检测本机 AI 客户端…');
+  const detected = agents.filter((a) => a.detect());
+  const missed = agents.filter((a) => !detected.includes(a)).map((a) => a.name);
+  spinner.stop(
+    detected.length
+      ? `检测到 ${detected.length}/${agents.length} 个客户端：${detected.map((a) => a.name).join('、')}` +
+          (missed.length ? `；未检测到：${missed.join('、')}` : '')
+      : '未检测到任何支持的 AI 客户端',
+  );
+
+  if (mcpCommand().built === false) {
+    p.log.warn(
+      `${mcpCommand().args[0]} 还不存在，本次只写配置；安装后先在仓库根目录执行 pnpm build`,
+    );
+  }
+
+  // 2. 写入 MCP 配置 + 安装 Skill：过程走 spinner，逐条结果聚合进面板
+  const working = p.spinner();
+  working.start('正在写入 MCP 配置与安装 Skill…');
+  const outcomes: AgentOutcome[] = agents.map((agent) => ({
+    name: agent.name,
+    detected: agent.detect(),
+    mcp: null,
+    skills: null,
+    hints: [],
+  }));
+  const byName = new Map(outcomes.map((o) => [o.name, o]));
 
   let mcpInstalled = 0;
   let mcpSkipped = 0;
   if (!noMcp) {
     const cmd = mcpCommand();
-    if (!cmd.built) {
-      console.error(
-        `[manta-fetcher] 警告: ${cmd.args[0]} 还不存在，安装后先在仓库根目录执行 pnpm build\n`,
-      );
-    }
-    console.error('MCP:');
-    for (const agent of buildAgents(home, cmd)) {
-      if (!agent.detect()) {
-        console.error(`  - ${agent.name}（未检测到，跳过）`);
-        continue;
-      }
+    for (const agent of detected) {
+      const row = byName.get(agent.name)!;
+      working.message(`正在写入 ${agent.name} 的 MCP 配置…`);
       try {
         const result = agent.install();
-        if (result === 'added') {
+        row.mcp = result;
+        if (result === 'added' || result === 'updated') {
+          row.mcpPath = agent.configPath;
           mcpInstalled++;
-          console.error(`  ✓ ${agent.name}: 已写入 ${rel(agent.configPath)}`);
-        } else if (result === 'updated') {
-          mcpInstalled++;
-          console.error(`  ✓ ${agent.name}: 已更新 ${rel(agent.configPath)}（原配置指向不同）`);
         } else {
           mcpSkipped++;
-          console.error(`  = ${agent.name}: 已有 manta-fetcher 配置，跳过`);
         }
       } catch (e) {
-        console.error(`  ✗ ${agent.name}: ${e instanceof Error ? e.message : e}`);
+        row.mcp = 'error';
+        row.hints.push(`${agent.name} MCP 写入失败：${e instanceof Error ? e.message : e}`);
       }
     }
-    console.error('');
   }
 
   let skillInstalled = 0;
-  if (!noSkill) {
-    const skillsRoot = findSkillsRoot();
-    if (!skillsRoot) {
-      console.error(
-        `[manta-fetcher] 警告: 找不到 packages/skills 源目录，跳过 Skill 安装（请在仓库内运行 init）\n`,
-      );
-    } else {
-      const targets = buildSkillTargets(home).filter((t) => t.detect());
-      const skills = readdirSync(skillsRoot).filter((name) =>
-        existsSync(path.join(skillsRoot, name, 'SKILL.md')),
-      );
-      console.error('Skill:');
+  const skillsRoot = noSkill ? null : findSkillsRoot();
+  if (skillsRoot) {
+    const skills = readdirSync(skillsRoot).filter((name) =>
+      existsSync(path.join(skillsRoot, name, 'SKILL.md')),
+    );
+    for (const target of skillTargets.filter((t) => t.detect())) {
+      const row = byName.get(target.name);
+      if (!row || !skills.length) continue;
+      row.skills = { installed: 0, latest: 0, failed: [] };
       for (const skill of skills) {
-        for (const target of targets) {
-          const dest = path.join(target.dir, skill);
-          try {
-            const existed = existsSync(dest);
-            if (existed && dirsEqual(path.join(skillsRoot, skill), dest)) {
-              console.error(`  = ${skill} → ${target.name}（已是最新）`);
-              continue;
-            }
-            mkdirSync(target.dir, { recursive: true });
-            cpSync(path.join(skillsRoot, skill), dest, { recursive: true });
-            skillInstalled++;
-            console.error(
-              `  ✓ ${skill} → ${target.name}: ${rel(dest)}${existed ? '（已更新）' : ''}`,
-            );
-          } catch (e) {
-            console.error(`  ✗ ${skill} → ${target.name}: ${e instanceof Error ? e.message : e}`);
+        const dest = path.join(target.dir, skill);
+        working.message(`正在安装 ${skill} → ${target.name}…`);
+        try {
+          if (existsSync(dest) && dirsEqual(path.join(skillsRoot, skill), dest)) {
+            row.skills.latest++;
+            continue;
           }
+          mkdirSync(target.dir, { recursive: true });
+          cpSync(path.join(skillsRoot, skill), dest, { recursive: true });
+          row.skills.installed++;
+          skillInstalled++;
+        } catch (e) {
+          row.skills.failed.push(skill);
+          row.hints.push(`${skill} → ${target.name} 安装失败：${e instanceof Error ? e.message : e}`);
         }
       }
-      if (targets.length === 0) console.error('  （未检测到支持 skill 的客户端）');
-      console.error('');
     }
   }
+  working.stop('写入完成');
 
-  console.error(
-    `[manta-fetcher] 完成: MCP 写入 ${mcpInstalled} 个客户端` +
+  if (!noSkill && !skillsRoot) {
+    p.log.warn('找不到 packages/skills 源目录，跳过 Skill 安装（请在仓库内运行 init）');
+  }
+
+  renderInitReport(outcomes, rel);
+  p.outro(
+    `完成：MCP 写入 ${mcpInstalled} 个客户端` +
       (mcpSkipped ? `（跳过 ${mcpSkipped} 个已配置）` : '') +
-      (skillInstalled ? `，Skill 更新 ${skillInstalled} 处` : ''),
+      (skillInstalled ? `，Skill 更新 ${skillInstalled} 处` : '') +
+      '。重启对应客户端后生效；首次使用前确认 Chromium 已安装（pnpm setup）。',
   );
-  console.error('重启对应客户端后生效；首次使用前确认 Chromium 已安装（pnpm setup）。');
+}
+
+/** 聚合渲染：每个 agent 一行（MCP + Skill 状态合并），失败原因缩进附在行下 */
+function renderInitReport(outcomes: AgentOutcome[], rel: (p: string) => string): void {
+  const MCP_LABEL: Record<NonNullable<AgentOutcome['mcp']>, string> = {
+    added: 'MCP 已写入',
+    updated: 'MCP 已更新',
+    exists: 'MCP 已配置',
+    error: 'MCP 失败',
+  };
+  const width = Math.max(...outcomes.map((o) => displayWidth(o.name)));
+  const lines: string[] = [];
+  for (const o of outcomes) {
+    if (!o.detected) {
+      lines.push(`  · ${padLabel(o.name, width)}  未检测到`);
+      continue;
+    }
+    const parts: string[] = [];
+    if (o.mcp) {
+      parts.push(
+        (o.mcp === 'added' || o.mcp === 'updated') && o.mcpPath
+          ? `${MCP_LABEL[o.mcp]}（${rel(o.mcpPath)}）`
+          : MCP_LABEL[o.mcp],
+      );
+    }
+    if (o.skills) {
+      const total = o.skills.installed + o.skills.latest;
+      parts.push(
+        o.skills.failed.length
+          ? `Skill ${o.skills.failed.length} 个失败`
+          : o.skills.installed
+            ? `Skill ${total} 个已同步（${o.skills.installed} 更新）`
+            : `Skill ${total} 个已是最新`,
+      );
+    }
+    const ok = o.mcp !== 'error' && !(o.skills?.failed.length ?? 0);
+    lines.push(`  ${ok ? '✔' : '✖'} ${padLabel(o.name, width)}  ${parts.join(' · ') || '未写入'}`);
+    for (const h of o.hints) lines.push(`      → ${h}`);
+  }
+  p.note(lines.join('\n'), 'init 结果');
 }

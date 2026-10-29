@@ -8,6 +8,7 @@
     "setup": "pnpm --filter @manta-fetcher/core exec playwright install chromium",
     "dev": "pnpm --filter @manta-fetcher/mcp dev"
   },
+  "packageManager": "pnpm@11.22.0",
   "engines": {
     "node": ">=20"
   },

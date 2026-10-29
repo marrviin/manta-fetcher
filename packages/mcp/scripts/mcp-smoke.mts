@@ -1,10 +1,11 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
-import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const transport = new StdioClientTransport({
   command: process.execPath,
-  args: [path.resolve('packages/mcp/dist/index.js')],
+  // 按脚本自身位置定位 dist（脚本在 packages/mcp/scripts/ 下），不依赖运行时的 cwd
+  args: [fileURLToPath(new URL('../dist/index.js', import.meta.url))],
   cwd: process.cwd(),
   env: { ...process.env } as Record<string, string>, // 透传 MANTA_FETCHER_PROFILES_DIR 等给 server 子进程
 });
