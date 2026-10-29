@@ -5,16 +5,16 @@ node_modules/
 dist/
 *.tsbuildinfo
 
-# Profiles（站点采集规则，按站点本地维护）
-profiles/
+# Profiles（站点采集规则，按站点本地维护，仅根目录）
+/profiles/
 
 # Runtime output (fetched articles, images, etc.)
-cache/
+/cache/
 .manta-fetcher/
 *.log
 
-# Auth / login state (cookies — never commit)
-auth/
+# Auth / login state (cookies — never commit，仅根目录；不加 / 会误伤 src/auth/ 源码)
+/auth/
 *.storage.json
 
 # OS
